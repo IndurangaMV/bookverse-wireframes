@@ -1,22 +1,18 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=admin-dashboard.html">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BookVerse · Admin Workspace</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="admin-wireframes.css">
-  <script>
-    window.location.replace("admin-dashboard.html");
-  </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>BookVerse · A world between pages</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body style="display: grid; place-items: center; min-height: 100vh; background: var(--bg); font-family: 'DM Sans', sans-serif;">
-  <div class="card" style="text-align: center; max-width: 480px; padding: 40px;">
-    <div class="brand" style="font-size: 28px; margin-bottom: 12px;">◈ Book<span>Verse</span></div>
-    <h1 style="font-size: 22px; margin-bottom: 10px;">Opening Platform Admin Console...</h1>
-    <p class="muted" style="margin-bottom: 24px;">Redirecting you to the comprehensive Admin Wireframe Suite based on the BookVerse SRS.</p>
-    <a href="admin-dashboard.html" class="button" style="text-decoration: none; display: inline-block;">Proceed to Admin Dashboard →</a>
-  </div>
+
+<body data-workspace="Admin">
+    <div id="app"></div>
+    <div id="toast" role="status"></div>
+    <script src="app.js"></script>
+    <script src="enhancements.js"></script>
 </body>
+
 </html>

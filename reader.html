@@ -1,1 +1,370 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BookVerse · A world between pages</title><link rel="stylesheet" href="styles.css"><style>.reader-tools-bar{position:relative;display:block;min-height:80px;padding:18px;background:var(--paper);border:1px solid var(--line);border-radius:13px;margin:16px 0 24px}.reader-playback-tool{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;gap:8px;min-width:0}.reader-playback-tool button{min-height:44px;white-space:nowrap}.reader-settings-menu{position:relative;display:flex;align-items:center}.reader-settings-button{display:grid;place-items:center;width:44px;height:44px;min-height:44px;padding:0;font-size:18px}.reader-settings-popover{position:absolute;z-index:50;top:calc(100% + 10px);left:-120px;display:grid;gap:12px;width:280px;max-width:calc(100vw - 32px);padding:16px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px #18254124}.reader-settings-popover[hidden]{display:none}.reader-settings-popover h3{margin:0;font-size:15px}.reader-setting-item{display:grid;gap:5px;font-size:12px}.reader-setting-item>span{display:flex;align-items:center;justify-content:space-between}.reader-setting-item input[type=range]{width:100%;margin:3px 0}.reader-setting-item select{width:100%;min-height:36px}.reader-settings-popover #voice-note{font-size:11px;line-height:1.4;color:var(--muted)}.reader-actions-tools{position:absolute;right:40px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:8px;min-width:0}.reader-tool{display:flex;flex-direction:column;justify-content:space-between;gap:8px;min-width:0}.reader-tool>span{font-size:11px;letter-spacing:.04em}.reader-tool select,.reader-tool button{width:100%;min-height:42px}.reader-tool #theme{width:100%;max-width:136px;height:36px;min-height:36px;padding:7px 10px}.reader-tool input[type=range]{width:100%;margin:12px 0}.reader-tool #font{width:118px;max-width:100%;margin:12px 0}.reader-tool button{padding:10px 8px;white-space:normal}.reader-actions-tools>.reader-tool{justify-content:center;width:190px}.reader-actions-tools>.reader-tool button{max-width:190px;align-self:flex-start}.reader-actions-tools>.reader-tool>span{display:none}.reader-icon-tool{display:flex;align-items:center;justify-content:center;min-width:0}.reader-icon-button{position:relative;display:grid;place-items:center;width:44px;height:44px;min-height:44px;padding:10px}.reader-icon-button svg{width:22px;height:22px}.reader-icon-button[data-tooltip]::after{content:attr(data-tooltip);position:absolute;z-index:20;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%);padding:7px 10px;border-radius:6px;background:#182541;color:#fff;font-size:12px;line-height:1.3;white-space:nowrap;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s,visibility .15s}.reader-icon-button:hover::after,.reader-icon-button:focus-visible::after{opacity:1;visibility:visible}.reader-highlight{background:#ffe58a;padding:0 1px}.topbar.reader-topbar{display:none;box-sizing:border-box;width:100%;max-width:none;height:64px;margin:0;padding:0 40px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:var(--paper);justify-content:flex-end}.topbar.reader-topbar .search{display:none}.reader-topbar+.content{max-width:none;padding:0}.reader-tools-bar{width:100%;margin:0 0 24px;padding:18px 40px;border-radius:0;border-width:0 0 1px}.reader-grid{max-width:1450px;margin:0 auto;padding:0 40px}.reading-sidebar .reading-context{display:grid;gap:16px;align-content:start}.reading-sidebar .reading-context h2{font-size:21px;line-height:1.3;margin:0;overflow-wrap:anywhere}.reading-sidebar .reading-label{font-size:10px;letter-spacing:1.8px;color:var(--muted);margin:2px 0 -8px}.reading-sidebar .reading-chapter{display:grid;gap:8px;padding:14px;background:var(--soft);border:1px solid var(--line);border-radius:10px;color:var(--ink)}.reading-sidebar .reading-chapter strong{font:500 17px/1.35 'Playfair Display',Georgia,serif}.reading-sidebar #logout{margin-top:auto}@media(max-width:1200px){.reader-tools-bar{display:flex;flex-direction:column;align-items:center;gap:12px;min-height:0;padding:14px 25px}.reader-playback-tool,.reader-actions-tools{position:static;transform:none}}@media(max-width:720px){.topbar.reader-topbar{width:100%;max-width:none;height:58px;min-height:58px;margin:0;padding:0 16px}.reader-grid{padding:0 25px}}@media(max-width:650px){.reader-tools-bar{gap:12px;padding:14px 16px}.reader-settings-popover{left:50%;transform:translateX(-50%)}.reader-actions-tools{flex-wrap:wrap;justify-content:center}.reader-actions-tools>.reader-tool{width:150px}.reader-grid{padding:0 16px}}</style></head><body data-workspace="Reader"><div id="app"></div><div id="toast" role="status"></div><script src="app.js"></script><script src="enhancements.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>BookVerse · A world between pages</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .reader-tools-bar {
+            position: relative;
+            display: block;
+            min-height: 80px;
+            padding: 18px;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            margin: 16px 0 24px
+        }
+
+        .reader-playback-tool {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 0
+        }
+
+        .reader-playback-tool button {
+            min-height: 44px;
+            white-space: nowrap
+        }
+
+        .reader-settings-menu {
+            position: relative;
+            display: flex;
+            align-items: center
+        }
+
+        .reader-settings-button {
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            min-height: 44px;
+            padding: 0;
+            font-size: 18px
+        }
+
+        .reader-settings-popover {
+            position: absolute;
+            z-index: 50;
+            top: calc(100% + 10px);
+            left: -120px;
+            display: grid;
+            gap: 12px;
+            width: 280px;
+            max-width: calc(100vw - 32px);
+            padding: 16px;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: 0 12px 32px #18254124
+        }
+
+        .reader-settings-popover[hidden] {
+            display: none
+        }
+
+        .reader-settings-popover h3 {
+            margin: 0;
+            font-size: 15px
+        }
+
+        .reader-setting-item {
+            display: grid;
+            gap: 5px;
+            font-size: 12px
+        }
+
+        .reader-setting-item>span {
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .reader-setting-item input[type=range] {
+            width: 100%;
+            margin: 3px 0
+        }
+
+        .reader-setting-item select {
+            width: 100%;
+            min-height: 36px
+        }
+
+        .reader-settings-popover #voice-note {
+            font-size: 11px;
+            line-height: 1.4;
+            color: var(--muted)
+        }
+
+        .reader-actions-tools {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0
+        }
+
+        .reader-tool {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 8px;
+            min-width: 0
+        }
+
+        .reader-tool>span {
+            font-size: 11px;
+            letter-spacing: .04em
+        }
+
+        .reader-tool select,
+        .reader-tool button {
+            width: 100%;
+            min-height: 42px
+        }
+
+        .reader-tool #theme {
+            width: 100%;
+            max-width: 136px;
+            height: 36px;
+            min-height: 36px;
+            padding: 7px 10px
+        }
+
+        .reader-tool input[type=range] {
+            width: 100%;
+            margin: 12px 0
+        }
+
+        .reader-tool #font {
+            width: 118px;
+            max-width: 100%;
+            margin: 12px 0
+        }
+
+        .reader-tool button {
+            padding: 10px 8px;
+            white-space: normal
+        }
+
+        .reader-actions-tools>.reader-tool {
+            justify-content: center;
+            width: 190px
+        }
+
+        .reader-actions-tools>.reader-tool button {
+            max-width: 190px;
+            align-self: flex-start
+        }
+
+        .reader-actions-tools>.reader-tool>span {
+            display: none
+        }
+
+        .reader-icon-tool {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0
+        }
+
+        .reader-icon-button {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            min-height: 44px;
+            padding: 10px
+        }
+
+        .reader-icon-button svg {
+            width: 22px;
+            height: 22px
+        }
+
+        .reader-icon-button[data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            z-index: 20;
+            left: 50%;
+            bottom: calc(100% + 9px);
+            transform: translateX(-50%);
+            padding: 7px 10px;
+            border-radius: 6px;
+            background: #182541;
+            color: #fff;
+            font-size: 12px;
+            line-height: 1.3;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .15s, visibility .15s
+        }
+
+        .reader-icon-button:hover::after,
+        .reader-icon-button:focus-visible::after {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .reader-highlight {
+            background: #ffe58a;
+            padding: 0 1px
+        }
+
+        .topbar.reader-topbar {
+            display: none;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: none;
+            height: 64px;
+            margin: 0;
+            padding: 0 40px;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            border-radius: 0;
+            background: var(--paper);
+            justify-content: flex-end
+        }
+
+        .topbar.reader-topbar .search {
+            display: none
+        }
+
+        .reader-topbar+.content {
+            max-width: none;
+            padding: 0
+        }
+
+        .reader-tools-bar {
+            width: 100%;
+            margin: 0 0 24px;
+            padding: 18px 40px;
+            border-radius: 0;
+            border-width: 0 0 1px
+        }
+
+        .reader-grid {
+            max-width: 1450px;
+            margin: 0 auto;
+            padding: 0 40px
+        }
+
+        .reading-sidebar .reading-context {
+            display: grid;
+            gap: 16px;
+            align-content: start
+        }
+
+        .reading-sidebar .reading-context h2 {
+            font-size: 21px;
+            line-height: 1.3;
+            margin: 0;
+            overflow-wrap: anywhere
+        }
+
+        .reading-sidebar .reading-label {
+            font-size: 10px;
+            letter-spacing: 1.8px;
+            color: var(--muted);
+            margin: 2px 0 -8px
+        }
+
+        .reading-sidebar .reading-chapter {
+            display: grid;
+            gap: 8px;
+            padding: 14px;
+            background: var(--soft);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            color: var(--ink)
+        }
+
+        .reading-sidebar .reading-chapter strong {
+            font: 500 17px/1.35 'Playfair Display', Georgia, serif
+        }
+
+        .reading-sidebar #logout {
+            margin-top: auto
+        }
+
+        @media(max-width:1200px) {
+            .reader-tools-bar {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+                min-height: 0;
+                padding: 14px 25px
+            }
+
+            .reader-playback-tool,
+            .reader-actions-tools {
+                position: static;
+                transform: none
+            }
+        }
+
+        @media(max-width:720px) {
+            .topbar.reader-topbar {
+                width: 100%;
+                max-width: none;
+                height: 58px;
+                min-height: 58px;
+                margin: 0;
+                padding: 0 16px
+            }
+
+            .reader-grid {
+                padding: 0 25px
+            }
+        }
+
+        @media(max-width:650px) {
+            .reader-tools-bar {
+                gap: 12px;
+                padding: 14px 16px
+            }
+
+            .reader-settings-popover {
+                left: 50%;
+                transform: translateX(-50%)
+            }
+
+            .reader-actions-tools {
+                flex-wrap: wrap;
+                justify-content: center
+            }
+
+            .reader-actions-tools>.reader-tool {
+                width: 150px
+            }
+
+            .reader-grid {
+                padding: 0 16px
+            }
+        }
+    </style>
+</head>
+
+<body data-workspace="Reader">
+    <div id="app"></div>
+    <div id="toast" role="status"></div>
+    <script src="app.js"></script>
+    <script src="enhancements.js"></script>
+</body>
+
+</html>

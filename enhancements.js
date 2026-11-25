@@ -1,8 +1,10 @@
 /* Interactive wireframe enhancements. All generated results are sample previews. */
+
 let storyStage='options',storyStyle='storybook',storyScope='chapter',storyTimer,agentOpen=false,notebookSection='dictionary';
 const lineIcons={grid:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',book:'<path d="M12 5C8 2 4 3 2 4v15c4-2 7-1 10 1 3-2 6-3 10-1V4c-4-2-7-1-10 1Zm0 0v15"/>',spark:'<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/>',people:'<circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 5"/>',chart:'<path d="M4 3v18h18M8 17v-5m5 5V7m5 10V4"/>',wallet:'<rect x="3" y="5" width="18" height="15" rx="3"/><path d="M4 5V3h14v2m-2 6h5v5h-5z"/>',headphones:'<path d="M4 14V11a8 8 0 0 1 16 0v3"/><rect x="2" y="12" width="5" height="9" rx="2"/><rect x="17" y="12" width="5" height="9" rx="2"/>',check:'<path d="m5 12 4 4L19 6"/><rect x="3" y="3" width="18" height="18" rx="4"/>',settings:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>',search:'<circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/>'};
 function icon(name){return `<svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${lineIcons[name]||lineIcons.spark}</svg>`}
 navs.Author.splice(2,1,['▤','Publications']);navs.Admin.splice(2,0,['♙','Author Management']);navs.Reader.splice(5,0,['✧','Story Studio']);navs.Reader.push(['♧','Notifications'],['⚙','Profile Settings']);navs.Author.push(['♧','Notifications'],['⚙','Profile Settings']);
+navs.Reader=navs.Reader.filter(([,name])=>!['Audiobooks','AI Assistant','Story Studio','Subscription'].includes(name));
 const originalContent=content,originalStudio=studio,originalBind=bind,originalRender=render,originalHighlightSelection=highlightSelection;
 content=function(){if(['Immersive Story','Story Studio'].includes(view))return storyStudio();if(view==='Notifications')return notifications();if(view==='Profile Settings')return profileSettings();if(view==='Author Management')return members(true);if(view==='User Management')return members(false);if(view==='Publications'||view==='My Books')return publications();if(view==='System Settings'||view==='Subscription Plans'||view==='Token Management')return adminConfiguration();return originalContent()};
 function publicationData(){const seed=[{id:'sample-1',title:'The Moonlit Garden',author:user.name,email:user.email,genre:'Fantasy',status:'Published',readers:1248,rating:'4.8'},{id:'sample-2',title:'Letters to Tomorrow',author:user.name,email:user.email,genre:'Fiction',status:'Draft',readers:0,rating:'—'},{id:'sample-3',title:'Where the Stars Sleep',author:user.name,email:user.email,genre:'Fantasy',status:'Pending Review',readers:0,rating:'—'}];return [...seed,...read('drafts',[]).filter(d=>d.email===user.email)]}
@@ -36,13 +38,15 @@ function ensureReaderFullscreenButton(){
       if(document.body.classList.contains('reader-fullscreen')){
         if(document.fullscreenElement){
           try{
+
+
             await document.exitFullscreen();
             document.body.classList.remove('reader-fullscreen');
             syncReaderFullscreenButton()
-          }catch(error){
-            toast(`Could not exit full screen: ${error.message||'browser denied the request.'}`)
+          } catch (error) {
+            toast(`Could not exit full screen: ${error.message || 'browser denied the request.'}`)
           }
-        }else{
+        } else {
           document.body.classList.remove('reader-fullscreen');
           syncReaderFullscreenButton()
         }
@@ -50,58 +54,94 @@ function ensureReaderFullscreenButton(){
       }
       document.body.classList.add('reader-fullscreen');
       syncReaderFullscreenButton();
-      const app=$('#app');
-      if(!app||typeof app.requestFullscreen!=='function'){
+      const app = $('#app');
+      if (!app || typeof app.requestFullscreen !== 'function') {
         toast('Browser full screen is unavailable; press Escape to exit reader mode.');
         return
       }
-      try{
+      try {
         await app.requestFullscreen()
-      }catch(error){
+      } catch (error) {
         syncReaderFullscreenButton();
-        toast(`Browser full screen was denied: ${error.message||'reader-only mode remains active.'}`)
+        toast(`Browser full screen was denied: ${error.message || 'reader-only mode remains active.'}`)
       }
     });
     page.parentElement.append(button)
   }
   syncReaderFullscreenButton()
 }
-document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)document.body.classList.remove('reader-fullscreen');syncReaderFullscreenButton()});
-document.addEventListener('keydown',event=>{if(event.key!=='Escape'||!document.body.classList.contains('reader-fullscreen'))return;if(document.fullscreenElement){event.preventDefault();document.exitFullscreen().then(()=>{document.body.classList.remove('reader-fullscreen');syncReaderFullscreenButton()}).catch(error=>toast(`Could not exit full screen: ${error.message||'browser denied the request.'}`));return}document.body.classList.remove('reader-fullscreen');syncReaderFullscreenButton()});
-function renderNotebookSection(){const panel=$('#reader-notebook-panel');if(!panel)return;const words=get('dictionary',[]).filter(item=>item.book===book),highlights=get('highlights',[]).filter(item=>item.book===book),bookmark=get('bookmark-'+book,null);let content;if(notebookSection==='dictionary')content=words.length?words.map(item=>`<div class="dictionary-item"><strong>${esc(item.word)}</strong><p>${esc(item.meaning)}</p><small>Chapter ${item.chapter+1} · ${esc(item.context||chapters[item.chapter]?.title||'')}</small></div>`).join(''):'<div class="empty">No dictionary words saved for this book yet.</div>';else if(notebookSection==='highlights')content=highlights.length?highlights.map(item=>`<div class="dictionary-item"><p><mark class="reader-highlight">${esc(item.text)}</mark></p><small>Chapter ${item.chapter+1} · ${esc(chapters[item.chapter]?.title||'')}</small>${item.context?`<p class="muted">${esc(item.context)}</p>`:''}</div>`).join(''):'<div class="empty">No highlights saved for this book yet.</div>';else{const savedChapter=bookmark&&Number.isInteger(bookmark.chapter)?bookmark.chapter:chapter;content=bookmark?`<div class="dictionary-item"><strong>${esc(books[book][0])}</strong><p>Chapter ${savedChapter+1} · ${esc(chapters[savedChapter]?.title||'')}</p><small>Current page bookmark</small></div>`:'<div class="empty">No pages bookmarked for this book yet.</div>'}const sections=[['dictionary','Dictionary'],['highlights','Highlights'],['bookmarks','Bookmarks']];panel.innerHTML=`<div class="tabs reader-notebook-tabs" role="tablist" aria-label="Notebook sections">${sections.map(([name,label])=>`<button type="button" id="notebook-${name}-tab" role="tab" aria-selected="${notebookSection===name}" aria-controls="reader-notebook-section" data-notebook-section="${name}" class="${notebookSection===name?'':'outline'}">${label}</button>`).join('')}</div><div id="reader-notebook-section" role="tabpanel" aria-labelledby="notebook-${notebookSection}-tab">${content}</div>`}
-function ensureReaderNotebook(){
-  const sidebar=$('.reader-sidebar'),tablist=sidebar&&sidebar.querySelector('[role="tablist"]');
-  if(!sidebar||!tablist)return;
-  if(!$('#reader-notebook-tab')){
-    const button=document.createElement('button');
-    button.type='button';
-    button.id='reader-notebook-tab';
-    button.className='outline';
-    button.setAttribute('role','tab');
-    button.setAttribute('aria-selected','false');
-    button.setAttribute('aria-controls','reader-notebook-panel');
-    button.style.flex='1';
-    button.textContent='Notebook';
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) document.body.classList.remove('reader-fullscreen'); syncReaderFullscreenButton() });
+document.addEventListener('keydown', event => { if (event.key !== 'Escape' || !document.body.classList.contains('reader-fullscreen')) return; if (document.fullscreenElement) { event.preventDefault(); document.exitFullscreen().then(() => { document.body.classList.remove('reader-fullscreen'); syncReaderFullscreenButton() }).catch(error => toast(`Could not exit full screen: ${error.message || 'browser denied the request.'}`)); return } document.body.classList.remove('reader-fullscreen'); syncReaderFullscreenButton() });
+function renderNotebookSection() { const panel = $('#reader-notebook-panel'); if (!panel) return; const words = get('dictionary', []).filter(item => item.book === book), highlights = get('highlights', []).filter(item => item.book === book), bookmark = get('bookmark-' + book, null); let content; if (notebookSection === 'dictionary') content = words.length ? words.map(item => `<div class="dictionary-item"><strong>${esc(item.word)}</strong><p>${esc(item.meaning)}</p><small>Chapter ${item.chapter + 1} · ${esc(item.context || chapters[item.chapter]?.title || '')}</small></div>`).join('') : '<div class="empty">No dictionary words saved for this book yet.</div>'; else if (notebookSection === 'highlights') content = highlights.length ? highlights.map(item => `<div class="dictionary-item"><p><mark class="reader-highlight">${esc(item.text)}</mark></p><small>Chapter ${item.chapter + 1} · ${esc(chapters[item.chapter]?.title || '')}</small>${item.context ? `<p class="muted">${esc(item.context)}</p>` : ''}</div>`).join('') : '<div class="empty">No highlights saved for this book yet.</div>'; else { const savedChapter = bookmark && Number.isInteger(bookmark.chapter) ? bookmark.chapter : chapter; content = bookmark ? `<div class="dictionary-item"><strong>${esc(books[book][0])}</strong><p>Chapter ${savedChapter + 1} · ${esc(chapters[savedChapter]?.title || '')}</p><small>Current page bookmark</small></div>` : '<div class="empty">No pages bookmarked for this book yet.</div>' } const sections = [['dictionary', 'Dictionary'], ['highlights', 'Highlights'], ['bookmarks', 'Bookmarks']]; panel.innerHTML = `<div class="tabs reader-notebook-tabs" role="tablist" aria-label="Notebook sections">${sections.map(([name, label]) => `<button type="button" id="notebook-${name}-tab" role="tab" aria-selected="${notebookSection === name}" aria-controls="reader-notebook-section" data-notebook-section="${name}" class="${notebookSection === name ? '' : 'outline'}">${label}</button>`).join('')}</div><div id="reader-notebook-section" role="tabpanel" aria-labelledby="notebook-${notebookSection}-tab">${content}</div>` }
+function ensureReaderNotebook() {
+  const sidebar = $('.reader-sidebar'), tablist = sidebar && sidebar.querySelector('[role="tablist"]');
+  if (!sidebar || !tablist) return;
+  if (!$('#reader-notebook-tab')) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.id = 'reader-notebook-tab';
+    button.className = 'outline';
+    button.setAttribute('role', 'tab');
+    button.setAttribute('aria-selected', 'false');
+    button.setAttribute('aria-controls', 'reader-notebook-panel');
+    button.style.flex = '1';
+    button.textContent = 'Notebook';
     tablist.append(button)
   }
-  if(!$('#reader-notebook-panel')){
-    const panel=document.createElement('section');
-    panel.className='card';
-    panel.id='reader-notebook-panel';
-    panel.setAttribute('role','tabpanel');
-    panel.setAttribute('aria-labelledby','reader-notebook-tab');
-    panel.hidden=true;
+  if (!$('#reader-notebook-panel')) {
+    const panel = document.createElement('section');
+    panel.className = 'card';
+    panel.id = 'reader-notebook-panel';
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-labelledby', 'reader-notebook-tab');
+    panel.hidden = true;
     sidebar.append(panel)
   }
   setReaderSidebarTab(readerTab);
   renderNotebookSection();
+  decorateReadingSidebar();
   ensureReaderFullscreenButton()
+}
+
+function decorateReadingSidebar(){
+  const context=$('.reading-context'),title=context&&context.querySelector('h2');
+  if(!context||!title)return;
+  const signOut=$('#logout');
+  if(signOut&&signOut.closest('.reading-sidebar'))signOut.remove();
+  if(!context.querySelector('.reading-cover')){
+    const coverSlot=document.createElement('template');
+    coverSlot.innerHTML=cover(book);
+    const bookCover=coverSlot.content.firstElementChild;
+    bookCover.classList.add('reading-cover');
+    bookCover.setAttribute('role','img');
+    bookCover.setAttribute('aria-label',`Cover of ${books[book][0]} by ${books[book][1]}`);
+    title.after(bookCover)
+  }
+  let chapterList=context.querySelector('.reading-chapters');
+  if(!chapterList){
+    chapterList=document.createElement('nav');
+    chapterList.className='reading-chapters';
+    chapterList.setAttribute('aria-label','Book chapters');
+    const currentChapter=context.querySelector('.reading-chapter');
+    if(currentChapter)currentChapter.replaceWith(chapterList);
+    else context.append(chapterList)
+  }
+  chapterList.innerHTML=`<span class="reading-chapters-label">CHAPTERS</span><div class="reading-chapter-list">${chapters.map((item,index)=>`<button type="button" class="reading-chapter${index===chapter?' current':''}" data-reader-chapter="${index}" aria-current="${index===chapter?'page':'false'}"><small>CHAPTER ${index+1}</small><strong>${esc(item.title)}</strong></button>`).join('')}</div>`;
+  chapterList.querySelectorAll('[data-reader-chapter]').forEach(button=>{button.onclick=()=>changeChapter(Number(button.dataset.readerChapter))})
 }
 function highlightSelectionWithNotebook(){const selection=window.getSelection(),range=selection&&selection.rangeCount?selection.getRangeAt(0):null,page=$('#page'),sentenceFor=node=>(node.nodeType===1?node:node.parentElement).closest('[data-sentence]'),sentence=range&&sentenceFor(range.startContainer),text=selection?selection.toString().trim():'',valid=!!selection&&!selection.isCollapsed&&!!range&&!!page&&page.contains(range.commonAncestorContainer)&&!!sentence&&sentence===sentenceFor(range.endContainer),context=sentence?sentence.textContent.trim():'',sentenceIndex=sentence?Number(sentence.dataset.sentence):-1;originalHighlightSelection();if(!valid||!text)return;const highlights=get('highlights',[]);if(!highlights.some(item=>item.book===book&&item.chapter===chapter&&item.sentence===sentenceIndex&&item.text===text)){highlights.push({id:Date.now(),book,chapter,sentence:sentenceIndex,text,context});set('highlights',highlights)}renderNotebookSection()}
 highlightSelection=highlightSelectionWithNotebook;
-document.addEventListener('click',e=>{const tab=e.target.closest('#reader-dictionary-tab,#reader-companion-tab,#reader-notebook-tab');if(tab){readerTab=tab.id==='reader-notebook-tab'?'notebook':tab.id==='reader-companion-tab'?'companion':'dictionary';setReaderSidebarTab(readerTab);if(readerTab==='notebook')renderNotebookSection();return}const section=e.target.closest('[data-notebook-section]');if(section){notebookSection=section.dataset.notebookSection;renderNotebookSection();return}if(e.target.closest('#bookmark'))renderNotebookSection()});
+document.addEventListener('click',e=>{
+  if(e.target.closest('#reader-settings-close')){
+    const panel=$('#reader-settings-panel'),button=$('#reader-settings');
+    if(panel)panel.hidden=true;
+    if(button){button.setAttribute('aria-expanded','false');button.focus()}
+    return
+  }
+  const tab=e.target.closest('#reader-dictionary-tab,#reader-companion-tab,#reader-notebook-tab');if(tab){readerTab=tab.id==='reader-notebook-tab'?'notebook':tab.id==='reader-companion-tab'?'companion':'dictionary';setReaderSidebarTab(readerTab);if(readerTab==='notebook')renderNotebookSection();return}const section=e.target.closest('[data-notebook-section]');if(section){notebookSection=section.dataset.notebookSection;renderNotebookSection();return}if(e.target.closest('#bookmark'))renderNotebookSection()
+});
 render=function(){originalRender();if(!user)return;setChapterNavigationIcons();const settings=$('#reader-settings'),toolbar=$('.reader-tools-bar'),playback=$('.reader-playback-tool'),chapterNav=$('.controls .row'),chapterControls=chapterNav&&chapterNav.parentElement,bookmarkPath=$('#bookmark svg path');if(settings&&toolbar&&playback)toolbar.insertBefore(settings.parentNode,playback);if(chapterNav&&toolbar&&playback){chapterNav.classList.add('reader-chapter-nav');toolbar.insertBefore(chapterNav,playback);if(chapterControls&&!chapterControls.children.length)chapterControls.remove()}if(bookmarkPath)bookmarkPath.setAttribute('d','M6 4.75A1.75 1.75 0 0 1 7.75 3h8.5A1.75 1.75 0 0 1 18 4.75V21l-6-4-6 4V4.75Z');document.querySelector('.agent-widget')?.remove();if(user.role==='Reader'&&view!=='AI Assistant'&&view!=='Read')agentUI();else if(user.role==='Reader'&&view==='Read'){const ai=document.querySelector('.reader-grid aside section:last-child');if(ai){ai.classList.add('reading-agent');const heading=ai.querySelector('h3');if(heading)heading.textContent='✦ Nova · Book companion';const hint=document.createElement('p');hint.className='muted';hint.textContent='Here with you as you read. Ask for a summary, a word meaning or an explanation.';ai.insertBefore(hint,ai.querySelector('.chatlog'));}}decorate();};
-function decorate(){document.querySelectorAll('nav button').forEach((b,i)=>{const name=b.dataset.nav;let type=/Dashboard/.test(name)?'grid':/User|Author Management/.test(name)?'people':/Wallet|Earnings|Token|Subscription/.test(name)?'wallet':/Audio/.test(name)?'headphones':/Analytic|Report|Goal/.test(name)?'chart':/Setting/.test(name)?'settings':/Approval|Moderation/.test(name)?'check':/AI|Story/.test(name)?'spark':'book';const old=b.querySelector('b');if(old)old.innerHTML=icon(type)});document.querySelectorAll('.stat .icon').forEach((b,i)=>b.innerHTML=icon(b.dataset.icon||['book','chart','spark','wallet'][i%4]));const top=$('.topbar');if(top&&!top.querySelector('.workspace-switch')){const a=document.createElement('a');a.href='index.html';a.className='workspace-switch';a.textContent='Workspaces ↗';top.prepend(a)}ensureReaderNotebook()}
+function decorate(){document.querySelectorAll('nav button').forEach((b,i)=>{const name=b.dataset.nav;let type=/Dashboard/.test(name)?'grid':/User|Author Management/.test(name)?'people':/Wallet|Earnings|Token|Subscription/.test(name)?'wallet':/Audio/.test(name)?'headphones':/Analytic|Report|Goal/.test(name)?'chart':/Setting/.test(name)?'settings':/Approval|Moderation/.test(name)?'check':/AI|Story/.test(name)?'spark':'book';const old=b.querySelector('b');if(old)old.innerHTML=icon(type)});document.querySelectorAll('.stat .icon').forEach((b,i)=>b.innerHTML=icon(['book','chart','spark','wallet'][i%4]));const top=$('.topbar');if(top&&!top.querySelector('.workspace-switch')){const a=document.createElement('a');a.href='index.html';a.className='workspace-switch';a.textContent='Workspaces ↗';top.prepend(a)}ensureReaderNotebook()}
 bind=function(){originalBind();bindEnhanced();};
 function bindEnhanced(){document.querySelectorAll('[data-pub-filter]').forEach(b=>b.onclick=()=>{set('publicationFilter',b.dataset.pubFilter);render()});document.querySelectorAll('[data-preview-publication]').forEach(b=>b.onclick=()=>modal(`<span class="pill">PUBLICATION PREVIEW</span><h1 style="margin-top:20px">${esc(b.dataset.previewPublication)}</h1><p class="muted">By ${esc(user.name)}</p><p>${chapters[0].lines.slice(0,3).join(' ')}</p><p class="note">Sample manuscript excerpt for layout preview.</p>`));document.querySelectorAll('[data-publication]').forEach(b=>b.onclick=()=>{const d=publicationData().find(d=>String(d.id)===b.dataset.publication);modal(`<span class="pill">MANAGE PUBLICATION</span><h2 style="margin-top:20px">${esc(d.title)}</h2><form id="publication-edit"><label>Title<input name="title" required maxlength="100" value="${esc(d.title)}"></label><label>Status<select name="status">${['Draft','Pending Review','Archived'].map(s=>`<option>${s}</option>`).join('')}</select></label><p class="note">Editing a seed publication creates a new local draft. Published changes should go through review.</p><button>Save draft</button></form>`);$('#publication-edit').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target),all=read('drafts',[]),found=all.find(x=>String(x.id)===String(d.id));if(found){found.title=f.get('title');found.status=f.get('status')}else all.push({...d,id:Date.now(),title:f.get('title'),status:f.get('status')});write('drafts',all);document.querySelector('.modal-overlay').remove();render();toast('Publication draft saved')}});on('#member-search','input',e=>{$('#member-rows').innerHTML=memberRows(view==='Author Management',e.target.value);bindMembers()});bindMembers();document.querySelectorAll('[data-application]').forEach(b=>b.onclick=()=>{write('application-'+b.dataset.application,b.dataset.decision);audit('Author application '+b.dataset.decision);render()});on('#profile-form','submit',e=>{e.preventDefault();user.name=new FormData(e.target).get('name').trim();write('session',user);render();toast('Profile preview updated')});on('#admin-config','submit',e=>{e.preventDefault();write('config',Object.fromEntries(new FormData(e.target)));audit('Configuration preview saved');toast('Demo configuration saved')});
 document.querySelectorAll('[data-style]').forEach(b=>b.onclick=()=>{storyStyle=b.dataset.style;render()});const voiceSelect=$('#story-narrator');if(voiceSelect&&'speechSynthesis'in window){voices=window.speechSynthesis.getVoices();voiceSelect.innerHTML='<option value="">Device default</option>'+voices.map(v=>`<option value="${esc(v.voiceURI)}">${esc(v.name)}</option>`).join('')};on('#start-generation','click',()=>{storyScope=$('#story-scope').value;sceneNarrator=$('#story-narrator').value;sceneSubtitles=$('#story-subtitles').value==='on';storyStage='loading';render();let step=0;storyTimer=setInterval(()=>{if(view!=='Story Studio'&&view!=='Immersive Story'){clearInterval(storyTimer);storyStage='options';return}step++;const bar=$('#generation-bar');if(bar)bar.style.width=step*25+'%';if($('#generation-step'))$('#generation-step').textContent=['Finding the characters…','Sketching the scene layouts…','Preparing the narration…','Your sample story is ready!'][Math.min(step,3)];if(step>=4){clearInterval(storyTimer);storyStage='preview';sceneIndex=0;render()}},700)});on('#cancel-generation','click',()=>{clearInterval(storyTimer);storyStage='options';render()});on('#story-reset','click',()=>{pauseStory();storyStage='options';render()});on('#story-next','click',()=>{pauseStory();sceneIndex++;render()});on('#story-back','click',()=>{pauseStory();sceneIndex--;render()});document.querySelectorAll('[data-scene]').forEach(b=>b.onclick=()=>{pauseStory();sceneIndex=+b.dataset.scene;render()});on('#story-audio','click',narrateScene);on('#story-play','click',()=>{if(sceneAutoplay){pauseStory();render();return}sceneAutoplay=true;narrateScene();sceneInterval=setInterval(()=>{if(!['Story Studio','Immersive Story'].includes(view)){pauseStory();return}const max=storyScope==='page'?3:chapters[chapter].lines.length;if(sceneIndex>=max-1){pauseStory();render();return}sceneIndex++;render();narrateScene()},7000);render()});
@@ -110,8 +150,46 @@ function narrateScene(){if(!('speechSynthesis'in window))return toast('Your brow
 function pauseStory(){clearInterval(sceneInterval);sceneAutoplay=false;stop()}
 function bindMembers(){document.querySelectorAll('[data-member-toggle]').forEach(b=>b.onclick=()=>{const id=b.dataset.memberToggle;write('suspended-'+id,!read('suspended-'+id,false));audit('Changed member '+id+' status');render()});document.querySelectorAll('[data-member]').forEach(b=>b.onclick=()=>{const p=samplePeople.find(p=>p.id===+b.dataset.member);modal(`<span class="pill">${p.role.toUpperCase()} PROFILE</span><h1 style="margin-top:20px">${p.name}</h1><p>${p.email}</p><p>Joined ${p.joined}</p><p>${p.books} ${p.role==='Author'?'publications':'saved books'}</p><p class="note">${p.role==='Author'?'Publications: The Moonlit Garden · Letters from the Sea · New draft in progress':'Recent reading: The Moonlit Garden · Beyond the Stars'}</p>`)})}
 const oldGo=go;go=function(v){pauseStory();clearInterval(storyTimer);if(storyStage==='loading')storyStage='options';oldGo(v)};
+let previewBookIndex=0,previewChapterIndex=0;
+const originalStoryContent=content,originalDecoratedRender=render,originalEnhancedBind=bind,originalBooksOnlyBind=bindBooksOnly,originalEnhancedGo=go;
+content=function(){return view==='Book Preview'?bookPreview():originalStoryContent()};
+function libraryBooks(){const saved=get('library',[0,2]);return Array.isArray(saved)?saved:[0,2]}
+function bookInLibrary(index){return libraryBooks().includes(index)}
+function saveBookToLibrary(index){const saved=libraryBooks(),exists=saved.includes(index);if(!exists)set('library',[...saved,index]);book=index;chapter=get('progress-'+index,0);write('book',book);write('chapter',chapter);return exists}
+function openBookDetails(index){
+  if(!Number.isInteger(index)||!books[index])return;
+  const entry=books[index];
+  modal(`<div class="book-detail"><div class="book-detail-layout"><div class="book-detail-cover">${cover(index)}</div><div><span class="eyebrow">BOOK DETAILS · ${esc(entry[2])}</span><h1>${esc(entry[0])}</h1><p class="muted">By ${esc(entry[1])}</p><p class="book-detail-rating">★ 4.8 / 5 <span class="badge">${esc(entry[4])}</span></p><p class="book-detail-views"><strong>312</strong> Views</p></div></div><div class="book-detail-stats"><div><strong>${chapters.length}</strong><small>Chapters</small></div><div><strong>430</strong><small>Pages</small></div></div><p class="note">Preview all three sample chapters in read-only mode. Add the book to your library to use voice, bookmarks, dictionary and notebook tools.</p><div class="book-detail-actions"><button type="button" class="outline" id="book-preview">Preview</button><button type="button" id="book-add">Add to library</button></div></div>`);
+  $('#book-preview').onclick=()=>{previewBookIndex=index;previewChapterIndex=0;document.querySelector('.modal-overlay')?.remove();go('Book Preview')};
+  $('#book-add').onclick=()=>{const alreadySaved=saveBookToLibrary(index);document.querySelector('.modal-overlay')?.remove();go('My Library');toast(alreadySaved?'This book is already in your library. Open it there to use reader tools.':'Added to your library. Open it there to use reader tools.')};
+}
+function bookPreview(){
+  const entry=books[previewBookIndex],current=chapters[previewChapterIndex];
+  return `<section class="book-preview"><header class="book-preview-header"><button type="button" class="outline" id="preview-back">← Browse books</button><div><small>READ-ONLY PREVIEW</small><h1>${esc(entry[0])}</h1><p>By ${esc(entry[1])}</p></div><button type="button" id="preview-add">Add to library</button></header><article class="book-preview-page"><header><small>CHAPTER ${previewChapterIndex+1} OF ${chapters.length}</small><h2>${esc(current.title)}</h2></header><div class="book-preview-text">${current.lines.map(line=>`<p>${esc(line)}</p>`).join('')}</div></article><nav class="book-preview-controls" aria-label="Preview chapters"><button type="button" class="outline" id="preview-previous" aria-label="Previous chapter" title="Previous chapter" ${previewChapterIndex===0?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><span>${previewChapterIndex+1} / ${chapters.length}</span><button type="button" class="outline" id="preview-next" aria-label="Next chapter" title="Next chapter" ${previewChapterIndex===chapters.length-1?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></nav><p class="book-preview-note">Read-only preview. Add this book to your library to unlock reader tools.</p></section>`
+}
+function bindBookCards(){
+  document.querySelectorAll('[data-book]').forEach(card=>{
+    const index=Number(card.dataset.book),open=()=>{
+      if(view==='Browse Books'||!bookInLibrary(index)){openBookDetails(index);return}
+      book=index;chapter=get('progress-'+index,0);write('book',book);write('chapter',chapter);go('Read')
+    };
+    card.onclick=e=>{e.preventDefault();open()};
+    card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}}
+  });
+  const back=$('#preview-back'),add=$('#preview-add'),previous=$('#preview-previous'),next=$('#preview-next');
+  if(back)back.onclick=()=>go('Browse Books');
+  if(add)add.onclick=()=>{const alreadySaved=saveBookToLibrary(previewBookIndex);go('My Library');toast(alreadySaved?'This book is already in your library. Open it there to use reader tools.':'Added to your library. Open it there to use reader tools.')};
+  if(previous)previous.onclick=()=>{previewChapterIndex--;render();window.scrollTo(0,0)};
+  if(next)next.onclick=()=>{previewChapterIndex++;render();window.scrollTo(0,0)}
+}
+render=function(){originalDecoratedRender();document.body.classList.toggle('book-preview-mode',view==='Book Preview');if(view==='Book Preview')document.querySelector('.agent-widget')?.remove()};
+bind=function(){originalEnhancedBind();bindBookCards()};
+bindBooksOnly=function(){originalBooksOnlyBind();bindBookCards()};
+go=function(v){if(v==='Read'&&!bookInLibrary(book)){openBookDetails(book);return}originalEnhancedGo(v)};
 const entryRole=document.body.dataset.workspace;if(entryRole){role=entryRole;if(user&&user.role!==entryRole){user=null;view='Dashboard'} }
+
+
 render();
 // Bind the floating companion after insertion, without rebinding the page controls.
-const originalAgentUI=agentUI;agentUI=function(){originalAgentUI();const widget=document.querySelector('.agent-widget');if(!widget)return;const form=widget.querySelector('#chat-form');if(form)form.onsubmit=e=>{e.preventDefault();const n=get('chatCount',0);if(n>=5)return toast('Daily preview limit reached.');const q=form.querySelector('input').value.trim();if(!q)return;const c=chapters[chapter];let text;if(/summary|summarize/i.test(q))text=c.lines.slice(0,3).join(' ');else{const word=Object.keys(lexicon).find(w=>q.toLowerCase().includes(w));text=word?word+': '+lexicon[word]:/mira|who|character/i.test(q)?c.lines[0]:'This sample companion can summarize the chapter or explain words such as luminous, tranquil and courage.'}const h=get('chat',[]);h.push({role:'user',text:q},{role:'assistant',text:text+' [Sample chapter '+(chapter+1)+']'});set('chat',h);set('chatCount',n+1);render()};const clear=widget.querySelector('#clear-chat');if(clear)clear.onclick=()=>{set('chat',[]);render()}};
+const originalAgentUI = agentUI; agentUI = function () { originalAgentUI(); const widget = document.querySelector('.agent-widget'); if (!widget) return; const form = widget.querySelector('#chat-form'); if (form) form.onsubmit = e => { e.preventDefault(); const n = get('chatCount', 0); if (n >= 5) return toast('Daily preview limit reached.'); const q = form.querySelector('input').value.trim(); if (!q) return; const c = chapters[chapter]; let text; if (/summary|summarize/i.test(q)) text = c.lines.slice(0, 3).join(' '); else { const word = Object.keys(lexicon).find(w => q.toLowerCase().includes(w)); text = word ? word + ': ' + lexicon[word] : /mira|who|character/i.test(q) ? c.lines[0] : 'This sample companion can summarize the chapter or explain words such as luminous, tranquil and courage.' } const h = get('chat', []); h.push({ role: 'user', text: q }, { role: 'assistant', text: text + ' [Sample chapter ' + (chapter + 1) + ']' }); set('chat', h); set('chatCount', n + 1); render() }; const clear = widget.querySelector('#clear-chat'); if (clear) clear.onclick = () => { set('chat', []); render() } };
 render();

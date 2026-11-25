@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moderation & Legal Compliance · BookVerse Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin-wireframes.css">
+</head>
+<body data-workspace="Admin">
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        ◈ Book<span>Verse</span>
+        <small>ADMINISTRATION SUITE</small>
+      </div>
+
+      <div>
+        <p class="navlabel">PLATFORM GOVERNANCE</p>
+        <nav style="display: grid; gap: 6px;">
+          <a href="admin-dashboard.html" class="admin-nav-item">
+            <span><span class="icon">◫</span> Dashboard</span>
+          </a>
+          <a href="admin-books-queue.html" class="admin-nav-item">
+            <span><span class="icon">✓</span> Book Approvals</span>
+            <span class="nav-counter">3</span>
+          </a>
+          <a href="admin-author-applications.html" class="admin-nav-item">
+            <span><span class="icon">♙</span> Author Applications</span>
+            <span class="nav-counter">2</span>
+          </a>
+          <a href="admin-users-list.html" class="admin-nav-item">
+            <span><span class="icon">👥</span> Users & Directory</span>
+          </a>
+          <a href="admin-moderation.html" class="admin-nav-item active">
+            <span><span class="icon">🛡️</span> Moderation & DMCA</span>
+            <span class="nav-counter alert">4</span>
+          </a>
+          <a href="admin-plans-economy.html" class="admin-nav-item">
+            <span><span class="icon">♧</span> Plans & Economy</span>
+          </a>
+          <a href="admin-audit-logs.html" class="admin-nav-item">
+            <span><span class="icon">📜</span> Audit & AI Logs</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="bottom">
+        <h3 style="font-size: 13px; margin-bottom: 6px;">24h Legal SLA</h3>
+        <p class="muted" style="font-size: 11px; line-height: 1.5; margin-bottom: 12px;">SRS Sec 8.7: Reported copyrighted material must be reviewed and processed within 24 hours.</p>
+        <a href="index.html" class="button outline" style="display: block; text-align: center; text-decoration: none; padding: 8px 12px; font-size: 12px;">Switch Workspace ↗</a>
+      </div>
+
+      <a href="index.html" class="button outline" style="text-align: center; text-decoration: none;">↪ Sign out</a>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="pill" style="background: #fee2e2; color: #991b1b; font-weight: bold;">SAFETY & COMPLIANCE</span>
+          <span style="font-size: 13px; color: var(--muted);">SRS Section 7.4, 7.9 & 8.7 · Content Moderation & DMCA</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div class="profile">
+            <span class="avatar" style="background: #27564a; color: #fff;">A</span>
+            <div>
+              <strong>Staff Administrator</strong><br>
+              <small>admin@bookverse.internal</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="row welcome" style="margin-bottom: 16px;">
+          <div>
+            <h1>Content Moderation & Trust Center</h1>
+            <p>Handle DMCA takedown requests, resolve flagged reader reviews, and investigate free access pass anomalies.</p>
+          </div>
+        </div>
+
+        <!-- 24-Hour SLA Alert Banner -->
+        <div class="sla-alert-banner">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 24px;">⚠</span>
+            <div>
+              <strong>Active DMCA Infringement Claim #DMCA-2026-09</strong><br>
+              <span style="font-size: 12px;">Mandatory 24-hour statutory takedown window (SRS Sec 8.7). Current timer: <strong>14h 18m remaining</strong></span>
+            </div>
+          </div>
+          <button style="background: #dc2626; color: #fff; padding: 8px 16px; font-size: 12px;" onclick="scrollToDmca()">Review Claim Immediately</button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="dmca" onclick="switchModTab('dmca')">
+            <span>⚖ Copyright / DMCA Takedowns</span>
+            <span class="nav-counter alert">1</span>
+          </button>
+          <button class="admin-tab" data-tab="reviews" onclick="switchModTab('reviews')">
+            <span>☆ Reported Reviews & Toxicity</span>
+            <span class="nav-counter">2</span>
+          </button>
+          <button class="admin-tab" data-tab="fraud" onclick="switchModTab('fraud')">
+            <span>🛡 Free-Pass Abuse Alerts</span>
+            <span class="nav-counter">1</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: DMCA & Copyright Takedowns -->
+        <section id="tab-dmca" class="card" style="padding: 0; overflow: hidden; margin-bottom: 24px;">
+          <div style="padding: 16px 20px; background: #fbfbf7; border-bottom: 1px solid var(--line);">
+            <h2 style="font-size: 16px; margin: 0;">Copyright Infringement Notice Queue</h2>
+            <small class="muted">SRS Section 8.7: Reported copyrighted content is taken down within 24 hours of admin review.</small>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8faf6;">
+                <th style="padding-left: 20px;">Target Book on BookVerse</th>
+                <th>Author</th>
+                <th>Claimant & Allegation</th>
+                <th>SLA Deadline</th>
+                <th>Status</th>
+                <th style="text-align: right; padding-right: 20px;">Takedown Enforcement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="dmca-row-1">
+                <td style="padding-left: 20px;">
+                  <strong style="color: var(--ink);">A Journey Through Ceylon (1922)</strong><br>
+                  <small class="muted">Book ID: #BK-7819 · Published 2 weeks ago</small>
+                </td>
+                <td>
+                  <span>S. D. Bandara</span><br>
+                  <small class="muted">Author #ATH-310</small>
+                </td>
+                <td>
+                  <strong>Heritage Books Colombo (Legal Rep: Perera & Associates)</strong><br>
+                  <small style="color: #7f1d1d;">Claim: Unauthorised reproduction of restored 1984 proprietary revised edition & commentary.</small>
+                </td>
+                <td>
+                  <strong style="color: #dc2626;">Today at 23:59</strong><br>
+                  <small class="muted">14h 18m left</small>
+                </td>
+                <td>
+                  <span class="admin-badge badge-warning" id="dmca-status-1">Under Investigation</span>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button" onclick="executeTakedown('A Journey Through Ceylon', 'dmca-row-1', 'dmca-status-1')" style="background: #dc2626; padding: 6px 12px; font-size: 12px;">Freeze & Takedown</button>
+                    <button class="outline" onclick="showToast('Dispatched request for counter-notice to author')" style="padding: 6px 10px; font-size: 12px;">Request Counter-Notice</button>
+                    <button class="light" onclick="dismissClaim('dmca-row-1')" style="padding: 6px 10px; font-size: 12px;">Dismiss</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- TAB 2: Reported Reviews -->
+        <section id="tab-reviews" class="card" style="padding: 0; overflow: hidden; display: none; margin-bottom: 24px;">
+          <div style="padding: 16px 20px; background: #fbfbf7; border-bottom: 1px solid var(--line);">
+            <h2 style="font-size: 16px; margin: 0;">Reported Reviews & Automated Toxicity Queue</h2>
+            <small class="muted">SRS Section 7.9: Readers report abusive reviews or spoilers; admins review and moderate.</small>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8faf6;">
+                <th style="padding-left: 20px;">Book & Reviewer</th>
+                <th>Star Rating</th>
+                <th>Review Content Excerpt</th>
+                <th>Report Reason & Flags</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Review 1: Major Spoiler without Tag -->
+              <tr id="review-row-1">
+                <td style="padding-left: 20px;">
+                  <strong>The Moonlit Garden</strong><br>
+                  <small class="muted">Reviewer: anonymous_reader_04</small>
+                </td>
+                <td>★☆☆☆☆</td>
+                <td style="max-width: 320px;">
+                  <div style="font-size: 12px; line-height: 1.5; background: #fff; padding: 8px; border-radius: 6px; border: 1px solid var(--line);">
+                    "Worst ending ever! Mira dies in Chapter 3 when the iron door collapses and the fox was actually the killer all along!"
+                  </div>
+                </td>
+                <td>
+                  <span class="admin-badge badge-warning">Unmarked Critical Spoiler</span><br>
+                  <small class="muted">Reported by 6 readers</small>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button light" onclick="hideReview('review-row-1', 'Spoiler tag applied')" style="padding: 6px 10px; font-size: 12px;">Apply Spoiler Mask</button>
+                    <button class="button" onclick="deleteReview('review-row-1')" style="background: #dc2626; padding: 6px 10px; font-size: 12px;">Delete Review</button>
+                    <button class="outline" onclick="dismissReviewReport('review-row-1')" style="padding: 6px 8px; font-size: 12px;">Dismiss</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Review 2: Harassment / Hate Speech -->
+              <tr id="review-row-2">
+                <td style="padding-left: 20px;">
+                  <strong>Beyond the Stars</strong><br>
+                  <small class="muted">Reviewer: troll_user_88</small>
+                </td>
+                <td>★☆☆☆☆</td>
+                <td style="max-width: 320px;">
+                  <div style="font-size: 12px; line-height: 1.5; background: #fff; padding: 8px; border-radius: 6px; border: 1px solid var(--line); color: #991b1b;">
+                    "This author is completely stupid and shouldn't even be allowed in Sri Lanka. Don't read anything by this trash."
+                  </div>
+                </td>
+                <td>
+                  <span class="admin-badge badge-rejected">Toxicity Score: 0.96 (High)</span><br>
+                  <small class="muted">Harassment / Policy Violation</small>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button" onclick="deleteReviewAndBan('review-row-2', 'troll_user_88')" style="background: #991b1b; padding: 6px 10px; font-size: 12px;">Delete & Suspend User</button>
+                    <button class="outline" onclick="dismissReviewReport('review-row-2')" style="padding: 6px 8px; font-size: 12px;">Dismiss</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- TAB 3: Free-Pass Abuse & Sybil Detection -->
+        <section id="tab-fraud" class="card" style="padding: 0; overflow: hidden; display: none; margin-bottom: 24px;">
+          <div style="padding: 16px 20px; background: #fbfbf7; border-bottom: 1px solid var(--line);">
+            <h2 style="font-size: 16px; margin: 0;">Free Access Quota Abuse & Sybil Detection</h2>
+            <small class="muted">SRS Section 7.4 & 7.7: Review flagged promotional free-pass abuse and suspicious author pool manipulation.</small>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8faf6;">
+                <th style="padding-left: 20px;">Promoted Book</th>
+                <th>Author</th>
+                <th>Detected Anomaly Pattern</th>
+                <th>Claim Volume</th>
+                <th>IP / Device Fingerprint</th>
+                <th style="text-align: right; padding-right: 20px;">Abuse Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="fraud-row-1">
+                <td style="padding-left: 20px;">
+                  <strong>Whispers in the Dark</strong><br>
+                  <small class="muted">Book ID: #BK-5521</small>
+                </td>
+                <td>
+                  <span>M. Senaratne</span><br>
+                  <small class="muted">Author #ATH-880</small>
+                </td>
+                <td>
+                  <span class="admin-badge badge-rejected">Rapid Pass Claim Cluster</span><br>
+                  <small style="color: #991b1b;">28 free passes claimed in 3 minutes from identical subnet. Suspected bot farm to trigger Fresh Voices boost.</small>
+                </td>
+                <td>
+                  <strong>28 / 30 Passes</strong><br>
+                  <small class="muted">93% consumed in 180s</small>
+                </td>
+                <td>
+                  <code>192.241.142.0/24</code><br>
+                  <small class="muted">Datacenter ASN proxy</small>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button" onclick="invalidatePasses('fraud-row-1')" style="background: #dc2626; padding: 6px 12px; font-size: 12px;">Invalidate Passes & Block Subnet</button>
+                    <button class="outline" onclick="showToast('Flagged book cleared of manipulation')" style="padding: 6px 10px; font-size: 12px;">Mark False Positive</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" role="status"></div>
+  <script src="admin-wireframes.js"></script>
+  <script>
+    function switchModTab(tabName) {
+      document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+      document.getElementById('tab-dmca').style.display = tabName === 'dmca' ? 'block' : 'none';
+      document.getElementById('tab-reviews').style.display = tabName === 'reviews' ? 'block' : 'none';
+      document.getElementById('tab-fraud').style.display = tabName === 'fraud' ? 'block' : 'none';
+    }
+
+    function scrollToDmca() {
+      switchModTab('dmca');
+      window.scrollTo({ top: 180, behavior: 'smooth' });
+    }
+
+    function executeTakedown(bookTitle, rowId, statusId) {
+      if (confirm(`Execute immediate 24h statutory takedown on "${bookTitle}"? The book will be unpublished and existing access frozen.`)) {
+        document.getElementById(statusId).className = 'admin-badge badge-rejected';
+        document.getElementById(statusId).innerText = 'Takedown Executed';
+        const row = document.getElementById(rowId);
+        row.style.background = '#fef2f2';
+        showToast(`Book "${bookTitle}" taken down within 24h SLA. Audit logged and author notified.`, 'error');
+      }
+    }
+
+    function dismissClaim(rowId) {
+      document.getElementById(rowId).remove();
+      showToast('DMCA claim dismissed as unsubstantiated.');
+    }
+
+    function hideReview(rowId, action) {
+      document.getElementById(rowId).style.opacity = '0.5';
+      showToast(`Review updated: ${action}.`);
+    }
+
+    function deleteReview(rowId) {
+      document.getElementById(rowId).remove();
+      showToast('Review removed from BookVerse catalogue.');
+    }
+
+    function deleteReviewAndBan(rowId, user) {
+      document.getElementById(rowId).remove();
+      showToast(`Review purged and account "${user}" suspended for severe harassment.`, 'error');
+    }
+
+    function invalidatePasses(rowId) {
+      document.getElementById(rowId).remove();
+      showToast('28 fraudulent passes revoked and proxy IP range blacklisted from Free Quota.');
+    }
+  </script>
+</body>
+</html>

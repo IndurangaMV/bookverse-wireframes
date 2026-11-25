@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BookVerse Admin · Platform Command Center</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin-wireframes.css">
+</head>
+<body data-workspace="Admin">
+  <div class="layout">
+    <!-- Persistent Admin Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        ◈ Book<span>Verse</span>
+        <small>ADMINISTRATION SUITE</small>
+      </div>
+
+      <div>
+        <p class="navlabel">PLATFORM GOVERNANCE</p>
+        <nav style="display: grid; gap: 6px;">
+          <a href="admin-dashboard.html" class="admin-nav-item active">
+            <span><span class="icon">◫</span> Dashboard</span>
+          </a>
+          <a href="admin-books-queue.html" class="admin-nav-item">
+            <span><span class="icon">✓</span> Book Approvals</span>
+            <span class="nav-counter">3</span>
+          </a>
+          <a href="admin-author-applications.html" class="admin-nav-item">
+            <span><span class="icon">♙</span> Author Applications</span>
+            <span class="nav-counter">2</span>
+          </a>
+          <a href="admin-users-list.html" class="admin-nav-item">
+            <span><span class="icon">👥</span> Users & Directory</span>
+          </a>
+          <a href="admin-moderation.html" class="admin-nav-item">
+            <span><span class="icon">🛡️</span> Moderation & DMCA</span>
+            <span class="nav-counter alert">4</span>
+          </a>
+          <a href="admin-plans-economy.html" class="admin-nav-item">
+            <span><span class="icon">♧</span> Plans & Economy</span>
+          </a>
+          <a href="admin-audit-logs.html" class="admin-nav-item">
+            <span><span class="icon">📜</span> Audit & AI Logs</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="bottom">
+        <h3 style="font-size: 13px; margin-bottom: 6px;">BookVerse System v1.0</h3>
+        <p class="muted" style="font-size: 11px; line-height: 1.5; margin-bottom: 12px;">IEEE 29148:2018 Standard Compliance · Role-Based Access Control</p>
+        <a href="index.html" class="button outline" style="display: block; text-align: center; text-decoration: none; padding: 8px 12px; font-size: 12px;">Switch Workspace ↗</a>
+      </div>
+
+      <a href="index.html" class="button outline" style="text-align: center; text-decoration: none;">↪ Sign out</a>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main>
+      <!-- Topbar -->
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="pill" style="background: #e6eee3; color: #234f42; font-weight: 600;">ADMIN CONSOLE</span>
+          <span style="font-size: 13px; color: var(--muted);">SRS Section 7.4 · Platform Administration & Governance</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <!-- AI Budget Monitor Pill -->
+          <div style="background: #ede9fe; border: 1px solid #ddd6fe; border-radius: 20px; padding: 6px 14px; font-size: 12px; color: #5b21b6; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 14px;">✧</span>
+            <span>AI Budget: <strong>LKR 42,500</strong> / 100,000 (42.5%)</span>
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981;" title="AI Service Operational"></span>
+          </div>
+
+          <div class="profile">
+            <span class="avatar" style="background: #27564a; color: #fff;">A</span>
+            <div>
+              <strong>Staff Administrator</strong><br>
+              <small>admin@bookverse.internal</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Hero Header -->
+        <div class="row welcome" style="margin-bottom: 24px;">
+          <div>
+            <h1>Platform Operations & Overview</h1>
+            <p>Real-time oversight of BookVerse reader subscriptions, author publishing, token liquidity, and AI operations.</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <a href="admin-books-queue.html" class="button" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+              <span>Review Submissions</span>
+              <span class="nav-counter" style="background: #fff; color: #27564a;">3</span>
+            </a>
+            <a href="admin-plans-economy.html" class="button outline" style="text-decoration: none;">Economy Settings</a>
+          </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="stats" style="grid-template-columns: repeat(4, 1fr);">
+          <div class="stat">
+            <span class="icon">👥</span>
+            <small>Active Subscribers</small>
+            <strong>1,420</strong>
+            <small style="color: #065f46;">↑ 12% this month (Basic: 680, Plus: 520, Prem: 220)</small>
+          </div>
+
+          <div class="stat">
+            <span class="icon">◉</span>
+            <small>Author Pool Accrual</small>
+            <strong>LKR 284,000</strong>
+            <small>40% subscription revenue share (Sec 3.6)</small>
+          </div>
+
+          <div class="stat">
+            <span class="icon">✓</span>
+            <small>Pending Approval Queue</small>
+            <strong>5 Total</strong>
+            <small style="color: #9a3412;">3 Books · 2 Author Verification Requests</small>
+          </div>
+
+          <div class="stat">
+            <span class="icon">🛡️</span>
+            <small>Moderation & DMCA Alerts</small>
+            <strong>4 Pending</strong>
+            <small style="color: #dc2626; font-weight: 600;">1 Copyright takedown under 24h SLA</small>
+          </div>
+        </div>
+
+        <!-- Two Column Operational Layout -->
+        <div class="twocol" style="grid-template-columns: 1fr 340px; margin-top: 24px;">
+          <div>
+            <!-- Priority Action Table: Submissions Needing Review -->
+            <section class="card" style="margin-bottom: 24px;">
+              <div class="row" style="margin-bottom: 16px;">
+                <div>
+                  <h2>Urgent Review Queue</h2>
+                  <p class="muted">Books and author applications awaiting platform approval</p>
+                </div>
+                <a href="admin-books-queue.html" class="button light" style="text-decoration: none; font-size: 12px;">View All Submissions →</a>
+              </div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Title / Applicant</th>
+                    <th>Author / Pen Name</th>
+                    <th>Access Tier</th>
+                    <th>Submitted</th>
+                    <th>Ingestion Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="admin-badge badge-pending">Book</span></td>
+                    <td><strong>The Clockwork Alchemist</strong></td>
+                    <td>Kavinda Perera</td>
+                    <td><span class="badge">Token-Locked (80 tokens)</span></td>
+                    <td>Today, 14:20</td>
+                    <td><span class="admin-badge badge-ai">RAG Ingestion Ready</span></td>
+                    <td>
+                      <a href="admin-book-detail-review.html" class="button" style="padding: 6px 12px; font-size: 11px; text-decoration: none;">Inspect & Decide</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="admin-badge badge-pending">Book</span></td>
+                    <td><strong>Shadows of Sigiriya</strong></td>
+                    <td>Nimali Senanayake</td>
+                    <td><span class="badge">Included (Free Quota 30)</span></td>
+                    <td>Yesterday</td>
+                    <td><span class="admin-badge badge-ai">Pending Approval</span></td>
+                    <td>
+                      <a href="admin-book-detail-review.html" class="button" style="padding: 6px 12px; font-size: 11px; text-decoration: none;">Inspect & Decide</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="admin-badge badge-warning">Author</span></td>
+                    <td><strong>Dr. Aruni Gunasekara</strong></td>
+                    <td>Reader ID: #U-8492</td>
+                    <td><span class="badge">Author Application</span></td>
+                    <td>2 days ago</td>
+                    <td><span class="admin-badge" style="background: #f1f5f9; color: #475569;">Sample Attached</span></td>
+                    <td>
+                      <a href="admin-author-applications.html" class="button light" style="padding: 6px 12px; font-size: 11px; text-decoration: none;">Verify Author</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <!-- Revenue & Economy Flow Summary -->
+            <section class="card">
+              <div class="row" style="margin-bottom: 16px;">
+                <div>
+                  <h2>Platform Token Circulation & Economy Health</h2>
+                  <p class="muted">SRS Section 3.4 & 7.6 · Token Wallet and Sandbox Liquidity</p>
+                </div>
+                <span class="pill">Current Month Cycle</span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px;">
+                <div style="background: #fbfbf7; border: 1px solid var(--line); border-radius: 10px; padding: 14px;">
+                  <small class="muted">Tokens Issued (Plan Allowances)</small>
+                  <div style="font-size: 20px; font-weight: bold; margin-top: 4px; color: var(--green);">145,200 ◉</div>
+                  <small>Basic (20), Plus (100), Prem (300)</small>
+                </div>
+                <div style="background: #fbfbf7; border: 1px solid var(--line); border-radius: 10px; padding: 14px;">
+                  <small class="muted">Tokens Purchased (Top-Up Packs)</small>
+                  <div style="font-size: 20px; font-weight: bold; margin-top: 4px; color: #b45309;">28,400 ◉</div>
+                  <small>Revenue: LKR 142,000</small>
+                </div>
+                <div style="background: #fbfbf7; border: 1px solid var(--line); border-radius: 10px; padding: 14px;">
+                  <small class="muted">Tokens Burned / Spent</small>
+                  <div style="font-size: 20px; font-weight: bold; margin-top: 4px; color: #4338ca;">92,150 ◉</div>
+                  <small>Book unlocks (70%) + AI queries</small>
+                </div>
+              </div>
+
+              <div class="bar-chart" style="height: 140px; margin-top: 30px;">
+                <div style="height: 45%;"><small>Week 1</small></div>
+                <div style="height: 65%;"><small>Week 2</small></div>
+                <div style="height: 80%;"><small>Week 3</small></div>
+                <div style="height: 92%;"><small>Week 4 (Current)</small></div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Sidebar Widgets: AI Health & System Alerts -->
+          <aside>
+            <!-- AI Cost Governance Widget -->
+            <section class="card" style="margin-bottom: 24px;">
+              <span class="pill" style="background: #ede9fe; color: #5b21b6; margin-bottom: 12px;">AI COST CONTROLLER</span>
+              <h2 style="font-size: 18px; margin-bottom: 8px;">Claude Haiku & RAG Usage</h2>
+              <p class="muted" style="font-size: 12px; line-height: 1.6;">SRS Section 5.5: Automatic rate limiting & monthly budget cap enforcement.</p>
+
+              <div style="margin: 16px 0;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
+                  <span>Monthly Spend</span>
+                  <strong>LKR 42,500 / 100,000</strong>
+                </div>
+                <div class="admin-progress">
+                  <div class="admin-progress-fill" style="width: 42.5%; background: #8b5cf6;"></div>
+                </div>
+                <small class="muted" style="font-size: 11px;">Status: Healthy (57.5% headroom)</small>
+              </div>
+
+              <div style="border-top: 1px solid var(--line); padding-top: 12px; font-size: 12px; display: grid; gap: 8px;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="muted">Questions Asked Today:</span>
+                  <strong>1,842</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="muted">Atlas Vector Latency:</span>
+                  <strong>142 ms</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="muted">Ingested Book Chunks:</span>
+                  <strong>14,890</strong>
+                </div>
+              </div>
+
+              <a href="admin-plans-economy.html" class="button outline" style="width: 100%; text-align: center; text-decoration: none; margin-top: 14px; font-size: 12px; display: block;">Adjust AI Spending Cap</a>
+            </section>
+
+            <!-- Urgent Security / Legal SLA Alerts -->
+            <section class="card" style="border-left: 4px solid #dc2626;">
+              <span class="pill" style="background: #fee2e2; color: #991b1b; margin-bottom: 8px;">LEGAL NOTICE</span>
+              <h2 style="font-size: 16px; margin: 8px 0;">DMCA Takedown Notice</h2>
+              <p style="font-size: 12px; line-height: 1.5; color: #7f1d1d; margin-bottom: 12px;">
+                Claimant claims unauthorised reproduction on <em>"A Journey Through Ceylon"</em>.
+              </p>
+              <div style="font-size: 11px; font-weight: bold; color: #dc2626; margin-bottom: 12px;">
+                ⏱ 14h 22m remaining to comply with 24h SLA (Sec 8.7)
+              </div>
+              <a href="admin-moderation.html" class="button" style="background: #dc2626; width: 100%; text-align: center; text-decoration: none; font-size: 12px; display: block;">Resolve Infringement</a>
+            </section>
+
+            <!-- Quick Audit Logs Preview -->
+            <section class="card" style="margin-top: 24px;">
+              <div class="row" style="margin-bottom: 12px;">
+                <h3 style="font-size: 14px; margin: 0;">Recent Audit Actions</h3>
+                <a href="admin-audit-logs.html" style="font-size: 11px; color: var(--green);">View All</a>
+              </div>
+              <div style="font-size: 11px; display: grid; gap: 10px; line-height: 1.4;">
+                <div>
+                  <strong>Approved Book</strong> #BK-2041<br>
+                  <span class="muted">By Induranga · 35 mins ago</span>
+                </div>
+                <div>
+                  <strong>Adjusted Tokens (+50)</strong> for user mira@example.com<br>
+                  <span class="muted">Reason: TTS Outage Compensation · 2h ago</span>
+                </div>
+                <div>
+                  <strong>Suspended User</strong> reader_bot_91<br>
+                  <span class="muted">Reason: Free-pass abuse detection · 4h ago</span>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" role="status"></div>
+  <script src="admin-wireframes.js"></script>
+</body>
+</html>

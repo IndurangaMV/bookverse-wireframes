@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Approvals & Ingestion Queue · BookVerse Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin-wireframes.css">
+</head>
+<body data-workspace="Admin">
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        ◈ Book<span>Verse</span>
+        <small>ADMINISTRATION SUITE</small>
+      </div>
+
+      <div>
+        <p class="navlabel">PLATFORM GOVERNANCE</p>
+        <nav style="display: grid; gap: 6px;">
+          <a href="admin-dashboard.html" class="admin-nav-item">
+            <span><span class="icon">◫</span> Dashboard</span>
+          </a>
+          <a href="admin-books-queue.html" class="admin-nav-item active">
+            <span><span class="icon">✓</span> Book Approvals</span>
+            <span class="nav-counter">3</span>
+          </a>
+          <a href="admin-author-applications.html" class="admin-nav-item">
+            <span><span class="icon">♙</span> Author Applications</span>
+            <span class="nav-counter">2</span>
+          </a>
+          <a href="admin-users-list.html" class="admin-nav-item">
+            <span><span class="icon">👥</span> Users & Directory</span>
+          </a>
+          <a href="admin-moderation.html" class="admin-nav-item">
+            <span><span class="icon">🛡️</span> Moderation & DMCA</span>
+            <span class="nav-counter alert">4</span>
+          </a>
+          <a href="admin-plans-economy.html" class="admin-nav-item">
+            <span><span class="icon">♧</span> Plans & Economy</span>
+          </a>
+          <a href="admin-audit-logs.html" class="admin-nav-item">
+            <span><span class="icon">📜</span> Audit & AI Logs</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="bottom">
+        <h3 style="font-size: 13px; margin-bottom: 6px;">Publishing Pipeline</h3>
+        <p class="muted" style="font-size: 11px; line-height: 1.5; margin-bottom: 12px;">SRS Sec 7.3 & 7.4: Book approval publishes to catalogue and triggers background RAG embeddings.</p>
+        <a href="index.html" class="button outline" style="display: block; text-align: center; text-decoration: none; padding: 8px 12px; font-size: 12px;">Switch Workspace ↗</a>
+      </div>
+
+      <a href="index.html" class="button outline" style="text-align: center; text-decoration: none;">↪ Sign out</a>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="pill">SRS SECTION 7.4</span>
+          <span style="font-size: 13px; color: var(--muted);">Book Submissions, Approval Queue & RAG Ingestion Pipeline</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div class="profile">
+            <span class="avatar" style="background: #27564a; color: #fff;">A</span>
+            <div>
+              <strong>Staff Administrator</strong><br>
+              <small>admin@bookverse.internal</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="row welcome" style="margin-bottom: 20px;">
+          <div>
+            <h1>Book Review & Publishing Pipeline</h1>
+            <p>Review author manuscript submissions, check proposed pricing and free quotas, and trigger AI chapter indexing.</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="outline" onclick="showToast('Queue refreshed from MongoDB replica set')">↻ Refresh Queue</button>
+          </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="pending">Pending Review <span class="nav-counter" style="background: #f59e0b; color: #fff;">3</span></button>
+          <button class="admin-tab" data-tab="published">Published Books <span class="nav-counter" style="background: #10b981; color: #fff;">8</span></button>
+          <button class="admin-tab" data-tab="rejected">Rejected Submissions <span class="nav-counter" style="background: #ef4444; color: #fff;">2</span></button>
+          <button class="admin-tab" data-tab="all">All Submissions</button>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="table-filter-bar">
+          <input type="search" class="search table-search" id="bookSearchInput" placeholder="⌕ Filter by book title, author, or genre…" oninput="filterBooksTable()">
+          <div class="table-actions">
+            <select id="accessFilter" onchange="filterBooksTable()" style="padding: 8px 12px; font-size: 12px;">
+              <option value="">All Access Classes</option>
+              <option value="Included">Included</option>
+              <option value="Token-Locked">Token-Locked</option>
+            </select>
+            <select id="genreFilter" onchange="filterBooksTable()" style="padding: 8px 12px; font-size: 12px;">
+              <option value="">All Genres</option>
+              <option value="Fantasy">Fantasy</option>
+              <option value="Fiction">Fiction</option>
+              <option value="Romance">Romance</option>
+              <option value="Sci-fi">Sci-fi</option>
+              <option value="History">History</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Books Table -->
+        <section class="card" style="padding: 0; overflow: hidden;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #fbfbf7;">
+                <th style="padding-left: 20px;">Book & Author</th>
+                <th>Genre & Lang</th>
+                <th>Access & Pricing</th>
+                <th>Formats</th>
+                <th>Submitted</th>
+                <th>RAG Vector Ingestion</th>
+                <th style="text-align: right; padding-right: 20px;">Decision Actions</th>
+              </tr>
+            </thead>
+            <tbody id="booksTableBody">
+              <!-- Row 1: Pending -->
+              <tr data-category="pending" data-access="Token-Locked" data-genre="Fantasy">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 44px; height: 62px; background: #284e52; border-radius: 4px; display: grid; place-items: center; color: #fff; font-size: 16px; font-weight: bold; flex-shrink: 0;">
+                      CA
+                    </div>
+                    <div>
+                      <strong style="font-size: 15px; color: var(--ink);">The Clockwork Alchemist</strong>
+                      <div class="muted" style="font-size: 12px;">Kavinda Perera · <span style="color: #065f46;">Verified Author ★ 4.9</span></div>
+                      <small style="color: #64748b;">14 Chapters · 340 Pages</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <strong>Fantasy / Steampunk</strong><br>
+                  <small class="muted">English (Sinhala notes)</small>
+                </td>
+                <td>
+                  <span class="badge" style="background: #fef3c7; color: #92400e;">Token-Locked</span><br>
+                  <strong style="color: #b45309;">80 Tokens</strong><br>
+                  <small class="muted">Quota: 50 passes</small>
+                </td>
+                <td>
+                  <span class="badge">EPUB 4.8MB</span><br>
+                  <span class="badge" style="background: #e0f2fe; color: #0369a1; margin-top: 3px;">+ 14 MP3 Tracks</span>
+                </td>
+                <td>
+                  Today<br>
+                  <small class="muted">14:20 PM</small>
+                </td>
+                <td>
+                  <span class="admin-badge badge-ai">Ready for Ingest</span><br>
+                  <small class="muted">Chunk validator: passed</small>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <a href="admin-book-detail-review.html" class="button" style="text-decoration: none; padding: 6px 12px; font-size: 12px;">Inspect Split View ↗</a>
+                    <button class="light" onclick="quickApproveBook('The Clockwork Alchemist', this)" style="padding: 6px 10px; font-size: 12px;" title="Approve immediately">✓ Quick</button>
+                    <button class="outline" onclick="openRejectModal('The Clockwork Alchemist')" style="padding: 6px 10px; font-size: 12px; color: #dc2626;">✗</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2: Pending -->
+              <tr data-category="pending" data-access="Included" data-genre="History">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 44px; height: 62px; background: #658b96; border-radius: 4px; display: grid; place-items: center; color: #fff; font-size: 16px; font-weight: bold; flex-shrink: 0;">
+                      SS
+                    </div>
+                    <div>
+                      <strong style="font-size: 15px; color: var(--ink);">Shadows of Sigiriya</strong>
+                      <div class="muted" style="font-size: 12px;">Nimali Senanayake · <span style="color: #64748b;">First Publication</span></div>
+                      <small style="color: #64748b;">8 Chapters · 185 Pages</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <strong>Historical Fiction</strong><br>
+                  <small class="muted">English & Sinhala</small>
+                </td>
+                <td>
+                  <span class="badge" style="background: #e6eee3; color: #27564a;">Included Plan</span><br>
+                  <strong style="color: #27564a;">Free with Sub</strong><br>
+                  <small class="muted">Quota: 30 Starter</small>
+                </td>
+                <td>
+                  <span class="badge">PDF 12MB</span><br>
+                  <span class="badge" style="background: #ede9fe; color: #5b21b6; margin-top: 3px;">Auto-TTS Requested</span>
+                </td>
+                <td>
+                  Yesterday<br>
+                  <small class="muted">09:15 AM</small>
+                </td>
+                <td>
+                  <span class="admin-badge badge-pending">Validation Queued</span><br>
+                  <small class="muted">EPUB parser pending</small>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <a href="admin-book-detail-review.html" class="button" style="text-decoration: none; padding: 6px 12px; font-size: 12px;">Inspect Split View ↗</a>
+                    <button class="light" onclick="quickApproveBook('Shadows of Sigiriya', this)" style="padding: 6px 10px; font-size: 12px;">✓ Quick</button>
+                    <button class="outline" onclick="openRejectModal('Shadows of Sigiriya')" style="padding: 6px 10px; font-size: 12px; color: #dc2626;">✗</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3: Pending with Price Flag -->
+              <tr data-category="pending" data-access="Token-Locked" data-genre="Romance">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 44px; height: 62px; background: #a45079; border-radius: 4px; display: grid; place-items: center; color: #fff; font-size: 16px; font-weight: bold; flex-shrink: 0;">
+                      LM
+                    </div>
+                    <div>
+                      <strong style="font-size: 15px; color: var(--ink);">Letters in the Mist</strong>
+                      <div class="muted" style="font-size: 12px;">Tariq Mansoor · <span style="color: #065f46;">Verified Author ★ 4.7</span></div>
+                      <small style="color: #64748b;">11 Chapters · 260 Pages</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <strong>Romance / Drama</strong><br>
+                  <small class="muted">English</small>
+                </td>
+                <td>
+                  <span class="badge" style="background: #fee2e2; color: #991b1b;">Price Warning!</span><br>
+                  <strong style="color: #dc2626;">450 Tokens</strong><br>
+                  <small style="color: #dc2626;">Exceeds 400 band limit (Sec 3.2)</small>
+                </td>
+                <td>
+                  <span class="badge">EPUB 2.1MB</span>
+                </td>
+                <td>
+                  2 days ago<br>
+                  <small class="muted">17:40 PM</small>
+                </td>
+                <td>
+                  <span class="admin-badge badge-warning">Price Check Required</span>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <a href="admin-book-detail-review.html" class="button" style="text-decoration: none; padding: 6px 12px; font-size: 12px;">Inspect & Correct ↗</a>
+                    <button class="outline" onclick="openRejectModal('Letters in the Mist')" style="padding: 6px 10px; font-size: 12px; color: #dc2626;">Reject</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 4: Published -->
+              <tr data-category="published" data-access="Included" data-genre="Fantasy">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 44px; height: 62px; background: #284e52; border-radius: 4px; display: grid; place-items: center; color: #fff; font-size: 16px; font-weight: bold; flex-shrink: 0;">
+                      MG
+                    </div>
+                    <div>
+                      <strong style="font-size: 15px; color: var(--ink);">The Moonlit Garden</strong>
+                      <div class="muted" style="font-size: 12px;">Elena Rivers · <span style="color: #065f46;">Verified Author ★ 4.8</span></div>
+                      <small style="color: #64748b;">Published Catalogue Title</small>
+                    </div>
+                  </div>
+                </td>
+                <td>Fantasy</td>
+                <td><span class="badge" style="background: #e6eee3; color: #27564a;">Included Plan</span></td>
+                <td><span class="badge">EPUB + Audio + TTS</span></td>
+                <td>12 Oct 2026</td>
+                <td><span class="admin-badge badge-approved">✓ Atlas Vectorized (1,480 chunks)</span></td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <button class="outline" onclick="showToast('Re-indexing vector embeddings for The Moonlit Garden...')">Re-index AI</button>
+                </td>
+              </tr>
+
+              <!-- Row 5: Rejected -->
+              <tr data-category="rejected" data-access="Token-Locked" data-genre="Sci-fi">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 44px; height: 62px; background: #344b6e; border-radius: 4px; display: grid; place-items: center; color: #fff; font-size: 16px; font-weight: bold; flex-shrink: 0;">
+                      CO
+                    </div>
+                    <div>
+                      <strong style="font-size: 15px; color: var(--ink);">Cyber Odyssey 2099</strong>
+                      <div class="muted" style="font-size: 12px;">Unknown Author · Rejected on 15 Nov</div>
+                      <small style="color: #dc2626;">Reason: Copyright infringement flag (Unverified manuscript)</small>
+                    </div>
+                  </div>
+                </td>
+                <td>Sci-fi</td>
+                <td><span class="badge">120 tokens</span></td>
+                <td><span class="badge">PDF</span></td>
+                <td>14 Nov 2026</td>
+                <td><span class="admin-badge badge-rejected">Rejected / Ingestion Halted</span></td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <button class="light" onclick="showToast('Viewing archived rejection audit logs')">Audit Trail</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Rejection Modal Dialog with Mandatory Feedback -->
+  <div class="modal-overlay" id="rejectModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Reject Book Submission</h3>
+        <button class="modal-close" onclick="closeModal('rejectModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 16px; line-height: 1.6;">
+          SRS Section 7.4 requires a <strong>mandatory rejection reason</strong>. This note will be recorded in the audit log and dispatched to the author's notification center.
+        </p>
+
+        <form id="rejectionForm" onsubmit="submitRejection(event)">
+          <input type="hidden" id="rejectBookTitle">
+
+          <label style="margin-bottom: 14px;">
+            Target Book Title
+            <input type="text" id="displayBookTitle" readonly style="background: #f1f5f9; font-weight: bold;">
+          </label>
+
+          <label style="margin-bottom: 14px;">
+            Primary Rejection Reason Category (Mandatory)
+            <select id="rejectionCategory" required>
+              <option value="">-- Choose Category --</option>
+              <option value="copyright">Potential Copyright / Plagiarism Concern (Sec 8.7)</option>
+              <option value="pricing">Token Price Exceeds 40–400 Band (Sec 3.2)</option>
+              <option value="formatting">Severe File Formatting / Parsing Errors</option>
+              <option value="content_policy">Violation of Community Guidelines / Explicit Content</option>
+              <option value="audio_mismatch">Audio Narration Desynchronised with Text</option>
+            </select>
+          </label>
+
+          <label style="margin-bottom: 14px;">
+            Detailed Actionable Feedback for the Author (Mandatory, min 20 chars)
+            <textarea id="rejectionNotes" rows="4" required minlength="20" placeholder="Explain clearly what corrections the author needs to make before resubmitting..."></textarea>
+          </label>
+
+          <div style="background: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; padding: 12px; font-size: 12px; color: #991b1b;">
+            ⚠ <strong>System consequence:</strong> Book status becomes <code>Rejected</code>, author will be notified to correct and resubmit, and background RAG embedding job is cancelled.
+          </div>
+
+          <div class="modal-footer" style="padding: 16px 0 0 0; background: transparent;">
+            <button type="button" class="outline" onclick="closeModal('rejectModal')">Cancel</button>
+            <button type="submit" style="background: #dc2626;">Confirm Rejection & Send Feedback</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" role="status"></div>
+  <script src="admin-wireframes.js"></script>
+  <script>
+    function openRejectModal(title) {
+      document.getElementById('rejectBookTitle').value = title;
+      document.getElementById('displayBookTitle').value = title;
+      openModal('rejectModal');
+    }
+
+    function submitRejection(e) {
+      e.preventDefault();
+      const title = document.getElementById('rejectBookTitle').value;
+      const category = document.getElementById('rejectionCategory').value;
+      const notes = document.getElementById('rejectionNotes').value;
+      closeModal('rejectModal');
+      showToast(`Book "${title}" rejected. Feedback dispatched to author.`, 'error');
+    }
+
+    function quickApproveBook(title, btn) {
+      btn.closest('tr').dataset.category = 'published';
+      const statusBadge = btn.closest('tr').querySelector('.badge-ai');
+      if (statusBadge) {
+        statusBadge.className = 'admin-badge badge-approved';
+        statusBadge.innerHTML = '✓ Ingestion Triggered';
+      }
+      showToast(`Book "${title}" approved! Published to catalogue & RAG chunking initiated.`);
+    }
+
+    function filterBooksTable() {
+      const q = document.getElementById('bookSearchInput').value.toLowerCase();
+      const access = document.getElementById('accessFilter').value;
+      const genre = document.getElementById('genreFilter').value;
+
+      document.querySelectorAll('#booksTableBody tr').forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const rowAccess = row.dataset.access || '';
+        const rowGenre = row.dataset.genre || '';
+
+        const matchesQuery = !q || text.includes(q);
+        const matchesAccess = !access || rowAccess === access;
+        const matchesGenre = !genre || rowGenre === genre;
+
+        row.style.display = (matchesQuery && matchesAccess && matchesGenre) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Author Verification Applications · BookVerse Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin-wireframes.css">
+</head>
+<body data-workspace="Admin">
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        ◈ Book<span>Verse</span>
+        <small>ADMINISTRATION SUITE</small>
+      </div>
+
+      <div>
+        <p class="navlabel">PLATFORM GOVERNANCE</p>
+        <nav style="display: grid; gap: 6px;">
+          <a href="admin-dashboard.html" class="admin-nav-item">
+            <span><span class="icon">◫</span> Dashboard</span>
+          </a>
+          <a href="admin-books-queue.html" class="admin-nav-item">
+            <span><span class="icon">✓</span> Book Approvals</span>
+            <span class="nav-counter">3</span>
+          </a>
+          <a href="admin-author-applications.html" class="admin-nav-item active">
+            <span><span class="icon">♙</span> Author Applications</span>
+            <span class="nav-counter">2</span>
+          </a>
+          <a href="admin-users-list.html" class="admin-nav-item">
+            <span><span class="icon">👥</span> Users & Directory</span>
+          </a>
+          <a href="admin-moderation.html" class="admin-nav-item">
+            <span><span class="icon">🛡️</span> Moderation & DMCA</span>
+            <span class="nav-counter alert">4</span>
+          </a>
+          <a href="admin-plans-economy.html" class="admin-nav-item">
+            <span><span class="icon">♧</span> Plans & Economy</span>
+          </a>
+          <a href="admin-audit-logs.html" class="admin-nav-item">
+            <span><span class="icon">📜</span> Audit & AI Logs</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="bottom">
+        <h3 style="font-size: 13px; margin-bottom: 6px;">Author Onboarding</h3>
+        <p class="muted" style="font-size: 11px; line-height: 1.5; margin-bottom: 12px;">SRS Sec 7.1: Readers submit a bio & writing sample to become published authors. Admin approval enables Author Studio.</p>
+        <a href="index.html" class="button outline" style="display: block; text-align: center; text-decoration: none; padding: 8px 12px; font-size: 12px;">Switch Workspace ↗</a>
+      </div>
+
+      <a href="index.html" class="button outline" style="text-align: center; text-decoration: none;">↪ Sign out</a>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="pill">SRS SECTION 7.1</span>
+          <span style="font-size: 13px; color: var(--muted);">Reader-to-Author Verification & Profile Vetting</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div class="profile">
+            <span class="avatar" style="background: #27564a; color: #fff;">A</span>
+            <div>
+              <strong>Staff Administrator</strong><br>
+              <small>admin@bookverse.internal</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="row welcome" style="margin-bottom: 20px;">
+          <div>
+            <h1>Author Applications & Vetting Queue</h1>
+            <p>Review reader requests to unlock the Author publishing studio. Inspect bios, genres, and sample manuscripts.</p>
+          </div>
+          <button class="outline" onclick="showToast('Applications refreshed')">↻ Refresh</button>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="pending">Pending Applications <span class="nav-counter" style="background: #f59e0b; color: #fff;">2</span></button>
+          <button class="admin-tab" data-tab="approved">Approved Authors</button>
+          <button class="admin-tab" data-tab="rejected">Rejected Applications</button>
+          <button class="admin-tab" data-tab="all">All Records</button>
+        </div>
+
+        <!-- Applications Table -->
+        <section class="card" style="padding: 0; overflow: hidden;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #fbfbf7;">
+                <th style="padding-left: 20px;">Applicant & Reader ID</th>
+                <th>Proposed Pen Name</th>
+                <th>Primary Genres & Lang</th>
+                <th>Writing Sample / Portfolio</th>
+                <th>Applied Date</th>
+                <th>Status</th>
+                <th style="text-align: right; padding-right: 20px;">Vetting Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1: Pending -->
+              <tr data-category="pending">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="avatar" style="background: #e0e7ff; color: #4338ca;">AG</span>
+                    <div>
+                      <strong style="font-size: 14px;">Dr. Aruni Gunasekara</strong>
+                      <div class="muted" style="font-size: 12px;">aruni.g@university.lk · Reader #U-8492</div>
+                      <small style="color: #64748b;">Member since Aug 2026 · 42 books read</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <strong>Aruni Gunasekara</strong><br>
+                  <small class="muted">Academic / Folklore</small>
+                </td>
+                <td>
+                  <strong>Historical Non-Fiction, Folklore</strong><br>
+                  <small class="muted">English & Sinhala</small>
+                </td>
+                <td>
+                  <button class="light" onclick="previewSample('Aruni Gunasekara', 'The Forgotten Monasteries of the North', 'Archaeological and cultural examination of ancient stone inscriptions in Anuradhapura...')" style="padding: 5px 10px; font-size: 11px;">
+                    📄 View Sample Excerpt (PDF)
+                  </button>
+                </td>
+                <td>
+                  2 days ago<br>
+                  <small class="muted">11:30 AM</small>
+                </td>
+                <td>
+                  <span class="admin-badge badge-pending">Pending Review</span>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button" onclick="approveAuthor('Dr. Aruni Gunasekara', this)" style="padding: 6px 12px; font-size: 12px; background: #059669;">✓ Approve as Author</button>
+                    <button class="outline" onclick="openAuthorRejectModal('Dr. Aruni Gunasekara')" style="padding: 6px 10px; font-size: 12px; color: #dc2626;">Reject</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2: Pending -->
+              <tr data-category="pending">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="avatar" style="background: #fce7f3; color: #be185d;">TR</span>
+                    <div>
+                      <strong style="font-size: 14px;">Tharindu Rathnayake</strong>
+                      <div class="muted" style="font-size: 12px;">tharindu.r@creative.io · Reader #U-9104</div>
+                      <small style="color: #64748b;">Member since Oct 2026 · 15 books read</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <strong>T. R. Nathan</strong><br>
+                  <small class="muted">Cyberpunk / Sci-fi</small>
+                </td>
+                <td>
+                  <strong>Science Fiction, Thriller</strong><br>
+                  <small class="muted">English & Tamil</small>
+                </td>
+                <td>
+                  <button class="light" onclick="previewSample('Tharindu Rathnayake', 'Neon Monsoons 2088', 'A futuristic cyber-heist set in a floating neon metropolis off the coast of Hambantota...')" style="padding: 5px 10px; font-size: 11px;">
+                    📄 View Sample Excerpt (EPUB)
+                  </button>
+                </td>
+                <td>
+                  Yesterday<br>
+                  <small class="muted">16:45 PM</small>
+                </td>
+                <td>
+                  <span class="admin-badge badge-pending">Pending Review</span>
+                </td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button" onclick="approveAuthor('Tharindu Rathnayake', this)" style="padding: 6px 12px; font-size: 12px; background: #059669;">✓ Approve as Author</button>
+                    <button class="outline" onclick="openAuthorRejectModal('Tharindu Rathnayake')" style="padding: 6px 10px; font-size: 12px; color: #dc2626;">Reject</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3: Approved -->
+              <tr data-category="approved">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="avatar" style="background: #d1fae5; color: #065f46;">ER</span>
+                    <div>
+                      <strong style="font-size: 14px;">Elena Rivers</strong>
+                      <div class="muted" style="font-size: 12px;">elena@example.com · Author #ATH-101</div>
+                    </div>
+                  </div>
+                </td>
+                <td>Elena Rivers</td>
+                <td>Fantasy, Young Adult</td>
+                <td><small class="muted">Published: The Moonlit Garden</small></td>
+                <td>28 Oct 2026</td>
+                <td><span class="admin-badge badge-approved">✓ Active Author</span></td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <button class="outline" onclick="showToast('Viewing author profile')">View Profile</button>
+                </td>
+              </tr>
+
+              <!-- Row 4: Rejected -->
+              <tr data-category="rejected">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="avatar" style="background: #fee2e2; color: #991b1b;">XU</span>
+                    <div>
+                      <strong style="font-size: 14px;">Anonymous Submitter</strong>
+                      <div class="muted" style="font-size: 12px;">temp_99@fake.mail · Reader #U-1102</div>
+                    </div>
+                  </div>
+                </td>
+                <td>Lord Shadow</td>
+                <td>Fantasy</td>
+                <td><small style="color: #dc2626;">Sample was plagiarised text</small></td>
+                <td>10 Nov 2026</td>
+                <td><span class="admin-badge badge-rejected">Application Rejected</span></td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <small class="muted">Rejected with note</small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Writing Sample Modal -->
+  <div class="modal-overlay" id="sampleModal">
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <h3 id="sampleModalTitle">Writing Sample Excerpt</h3>
+        <button class="modal-close" onclick="closeModal('sampleModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="background: #f8faf6; border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <h4 id="sampleManuscriptTitle" style="margin: 0 0 6px; font-size: 16px; font-family: 'Playfair Display', Georgia, serif;"></h4>
+          <p id="sampleSummary" class="muted" style="font-size: 13px; margin: 0;"></p>
+        </div>
+
+        <div class="reader-sample-box" style="max-height: 380px;">
+          <p>The dawn over the ancient ruins was not golden, but the deep grey of weathered basalt. Centuries of monsoon rains had washed away the lime plaster, leaving bare granite that still retained the faint chiseled grooves of Brahmi script.</p>
+          <p>Professor Wickremasinghe adjusted his magnifying glass against the south pillar. "Look closely at this ligature," he whispered, pointing to the delicate swirl at the base of the character. "This is not standard 4th-century court calligraphy. This is monastic shorthand."</p>
+          <p>Behind them, the jungle awakened with the shrill cries of junglefowl and the rustle of macaque troops in the canopy. The team had three weeks before the seasonal floods turned the access causeway into an impassable marshland.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="outline" onclick="closeModal('sampleModal')">Close Preview</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Author Rejection Modal -->
+  <div class="modal-overlay" id="authorRejectModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Reject Author Application</h3>
+        <button class="modal-close" onclick="closeModal('authorRejectModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="confirmAuthorReject(event)">
+          <input type="hidden" id="rejectApplicantName">
+          <label style="margin-bottom: 14px;">
+            Applicant Name
+            <input type="text" id="displayApplicantName" readonly style="background: #f1f5f9;">
+          </label>
+          <label style="margin-bottom: 14px;">
+            Reason for Rejection
+            <select required>
+              <option value="">-- Choose Reason --</option>
+              <option value="incomplete">Insufficient or low-quality writing sample</option>
+              <option value="plagiarism">Sample content matches copyrighted text elsewhere</option>
+              <option value="policy">Violates BookVerse author guidelines</option>
+            </select>
+          </label>
+          <label style="margin-bottom: 14px;">
+            Feedback to Applicant (Mandatory)
+            <textarea rows="3" required placeholder="Explain why the application was not approved..."></textarea>
+          </label>
+          <div class="modal-footer" style="padding: 12px 0 0; background: transparent;">
+            <button type="button" class="outline" onclick="closeModal('authorRejectModal')">Cancel</button>
+            <button type="submit" style="background: #dc2626;">Confirm Rejection</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" role="status"></div>
+  <script src="admin-wireframes.js"></script>
+  <script>
+    function previewSample(author, title, summary) {
+      document.getElementById('sampleModalTitle').innerText = `Writing Sample: ${author}`;
+      document.getElementById('sampleManuscriptTitle').innerText = title;
+      document.getElementById('sampleSummary').innerText = summary;
+      openModal('sampleModal');
+    }
+
+    function approveAuthor(name, btn) {
+      btn.closest('tr').dataset.category = 'approved';
+      const badge = btn.closest('tr').querySelector('.badge-pending');
+      if (badge) {
+        badge.className = 'admin-badge badge-approved';
+        badge.innerText = '✓ Approved as Author';
+      }
+      btn.parentElement.innerHTML = `<span class="admin-badge badge-approved">Role: Author</span>`;
+      showToast(`User "${name}" approved! RBAC role upgraded to Author with publishing access.`);
+    }
+
+    function openAuthorRejectModal(name) {
+      document.getElementById('rejectApplicantName').value = name;
+      document.getElementById('displayApplicantName').value = name;
+      openModal('authorRejectModal');
+    }
+
+    function confirmAuthorReject(e) {
+      e.preventDefault();
+      const name = document.getElementById('rejectApplicantName').value;
+      closeModal('authorRejectModal');
+      showToast(`Application for "${name}" rejected. Feedback dispatched.`, 'error');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User & Author Management · BookVerse Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin-wireframes.css">
+</head>
+<body data-workspace="Admin">
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        ◈ Book<span>Verse</span>
+        <small>ADMINISTRATION SUITE</small>
+      </div>
+
+      <div>
+        <p class="navlabel">PLATFORM GOVERNANCE</p>
+        <nav style="display: grid; gap: 6px;">
+          <a href="admin-dashboard.html" class="admin-nav-item">
+            <span><span class="icon">◫</span> Dashboard</span>
+          </a>
+          <a href="admin-books-queue.html" class="admin-nav-item">
+            <span><span class="icon">✓</span> Book Approvals</span>
+            <span class="nav-counter">3</span>
+          </a>
+          <a href="admin-author-applications.html" class="admin-nav-item">
+            <span><span class="icon">♙</span> Author Applications</span>
+            <span class="nav-counter">2</span>
+          </a>
+          <a href="admin-users-list.html" class="admin-nav-item active">
+            <span><span class="icon">👥</span> Users & Directory</span>
+          </a>
+          <a href="admin-moderation.html" class="admin-nav-item">
+            <span><span class="icon">🛡️</span> Moderation & DMCA</span>
+            <span class="nav-counter alert">4</span>
+          </a>
+          <a href="admin-plans-economy.html" class="admin-nav-item">
+            <span><span class="icon">♧</span> Plans & Economy</span>
+          </a>
+          <a href="admin-audit-logs.html" class="admin-nav-item">
+            <span><span class="icon">📜</span> Audit & AI Logs</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="bottom">
+        <h3 style="font-size: 13px; margin-bottom: 6px;">RBAC & Ledgers</h3>
+        <p class="muted" style="font-size: 11px; line-height: 1.5; margin-bottom: 12px;">SRS Sec 7.1 & 7.6: Manage user accounts, role suspension, and adjust token wallets with mandatory audit reasons.</p>
+        <a href="index.html" class="button outline" style="display: block; text-align: center; text-decoration: none; padding: 8px 12px; font-size: 12px;">Switch Workspace ↗</a>
+      </div>
+
+      <a href="index.html" class="button outline" style="text-align: center; text-decoration: none;">↪ Sign out</a>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="pill">SRS SECTION 7.1 & 7.6</span>
+          <span style="font-size: 13px; color: var(--muted);">User Directory, Role Controls & Manual Wallet Adjustment</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div class="profile">
+            <span class="avatar" style="background: #27564a; color: #fff;">A</span>
+            <div>
+              <strong>Staff Administrator</strong><br>
+              <small>admin@bookverse.internal</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="row welcome" style="margin-bottom: 20px;">
+          <div>
+            <h1>User Accounts & Identity Directory</h1>
+            <p>Manage registered Readers, Authors, and Staff. Inspect active subscriptions, token balances, and account standing.</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="outline" onclick="showToast('Exported user audit snapshot')">📥 Export CSV</button>
+          </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="all">All Accounts (1,425)</button>
+          <button class="admin-tab" data-tab="reader">Readers (1,380)</button>
+          <button class="admin-tab" data-tab="author">Authors (42)</button>
+          <button class="admin-tab" data-tab="admin">Administrators (3)</button>
+          <button class="admin-tab" data-tab="suspended">Suspended Accounts (2)</button>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="table-filter-bar">
+          <input type="search" class="search table-search" id="userSearchInput" placeholder="⌕ Search by name, email, or user ID..." oninput="filterUserTable()">
+          <div class="table-actions">
+            <select id="planFilter" onchange="filterUserTable()" style="padding: 8px 12px; font-size: 12px;">
+              <option value="">All Subscription Plans</option>
+              <option value="Premium">Premium Plan</option>
+              <option value="Plus">Plus Plan</option>
+              <option value="Basic">Basic Plan</option>
+              <option value="Unsubscribed">No Active Plan</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <section class="card" style="padding: 0; overflow: hidden;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #fbfbf7;">
+                <th style="padding-left: 20px;">User & Email</th>
+                <th>Role</th>
+                <th>Subscription Tier</th>
+                <th>Token Balance</th>
+                <th>Joined Date</th>
+                <th>Status</th>
+                <th style="text-align: right; padding-right: 20px;">Administrative Actions</th>
+              </tr>
+            </thead>
+            <tbody id="userTableBody">
+              <!-- User 1: Reader with Plus plan -->
+              <tr data-category="reader" data-plan="Plus" data-status="active">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="avatar" style="background: #e2e8f0; color: #334155;">ME</span>
+                    <div>
+                      <strong style="font-size: 14px;">Mira Evans</strong>
+                      <div class="muted" style="font-size: 12px;">mira@example.com · #U-1002</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="admin-badge" style="background: #f1f5f9; color: #334155;">Reader</span></td>
+                <td>
+                  <span class="badge" style="background: #e0f2fe; color: #0369a1;">Plus Member</span><br>
+                  <small class="muted">Renews 14 Dec 2026</small>
+                </td>
+                <td>
+                  <strong style="color: #065f46; font-size: 15px;" id="token-bal-1">240 ◉</strong><br>
+                  <small class="muted">50 rolled over</small>
+                </td>
+                <td>04 Nov 2026</td>
+                <td><span class="admin-badge badge-approved" id="status-1">Active</span></td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button light" onclick="openTokenModal('Mira Evans', 'mira@example.com', 240, 'token-bal-1')" style="padding: 6px 10px; font-size: 12px;">Adjust Tokens</button>
+                    <button class="outline" onclick="toggleSuspend('Mira Evans', 'status-1', this)" style="padding: 6px 10px; font-size: 12px; color: #dc2626;">Suspend</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 2: Author -->
+              <tr data-category="author" data-plan="Premium" data-status="active">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="avatar" style="background: #ede9fe; color: #5b21b6;">ER</span>
+                    <div>
+                      <strong style="font-size: 14px;">Elena Rivers</strong>
+                      <div class="muted" style="font-size: 12px;">elena@example.com · #ATH-101</div>
+                      <small style="color: #5b21b6;">Published: The Moonlit Garden</small>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="admin-badge badge-ai">Author</span></td>
+                <td>
+                  <span class="badge" style="background: #f3e8ff; color: #6b21a8;">Premium Tier</span><br>
+                  <small class="muted">Annual subscriber</small>
+                </td>
+                <td>
+                  <strong style="color: #065f46; font-size: 15px;" id="token-bal-2">820 ◉</strong><br>
+                  <small class="muted">Earnings: LKR 24,500</small>
+                </td>
+                <td>28 Oct 2026</td>
+                <td><span class="admin-badge badge-approved" id="status-2">Active</span></td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button light" onclick="openTokenModal('Elena Rivers', 'elena@example.com', 820, 'token-bal-2')" style="padding: 6px 10px; font-size: 12px;">Adjust Tokens</button>
+                    <button class="outline" onclick="toggleSuspend('Elena Rivers', 'status-2', this)" style="padding: 6px 10px; font-size: 12px; color: #dc2626;">Suspend</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 3: Reader with Basic Plan -->
+              <tr data-category="reader" data-plan="Basic" data-status="active">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="avatar" style="background: #fef3c7; color: #92400e;">CB</span>
+                    <div>
+                      <strong style="font-size: 14px;">Clara Bennett</strong>
+                      <div class="muted" style="font-size: 12px;">clara@example.com · #U-1409</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="admin-badge" style="background: #f1f5f9; color: #334155;">Reader</span></td>
+                <td>
+                  <span class="badge" style="background: #fef3c7; color: #92400e;">Basic Plan</span><br>
+                  <small class="muted">Monthly auto-renew</small>
+                </td>
+                <td>
+                  <strong style="color: #065f46; font-size: 15px;" id="token-bal-3">15 ◉</strong><br>
+                  <small class="muted">No rollover</small>
+                </td>
+                <td>07 Nov 2026</td>
+                <td><span class="admin-badge badge-approved" id="status-3">Active</span></td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button light" onclick="openTokenModal('Clara Bennett', 'clara@example.com', 15, 'token-bal-3')" style="padding: 6px 10px; font-size: 12px;">Adjust Tokens</button>
+                    <button class="outline" onclick="toggleSuspend('Clara Bennett', 'status-3', this)" style="padding: 6px 10px; font-size: 12px; color: #dc2626;">Suspend</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 4: Suspended User (Abuse flag) -->
+              <tr data-category="suspended" data-plan="Unsubscribed" data-status="suspended">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="avatar" style="background: #fee2e2; color: #991b1b;">RB</span>
+                    <div>
+                      <strong style="font-size: 14px;">reader_bot_91</strong>
+                      <div class="muted" style="font-size: 12px;">bot_farm_91@throwaway.net · #U-9941</div>
+                      <small style="color: #dc2626;">Suspended for automated Free-Pass claiming</small>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="admin-badge badge-rejected">Flagged</span></td>
+                <td><span class="badge">Unsubscribed</span></td>
+                <td>
+                  <strong style="color: #64748b; font-size: 15px;">0 ◉</strong><br>
+                  <small class="muted">Frozen</small>
+                </td>
+                <td>18 Nov 2026</td>
+                <td><span class="admin-badge badge-rejected" id="status-4">Suspended</span></td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <div class="action-btn-group">
+                    <button class="button light" onclick="showToast('Reactivating reader_bot_91 requires supervisor sign-off')">Reactivate</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- User 5: Administrator -->
+              <tr data-category="admin" data-plan="Premium" data-status="active">
+                <td style="padding-left: 20px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="avatar" style="background: #27564a; color: #fff;">IN</span>
+                    <div>
+                      <strong style="font-size: 14px;">Induranga (Lead Admin)</strong>
+                      <div class="muted" style="font-size: 12px;">admin@bookverse.internal · #ADM-001</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="admin-badge" style="background: #27564a; color: #fff;">Admin Staff</span></td>
+                <td><span class="badge" style="background: #e6eee3; color: #27564a;">Staff Unlimited</span></td>
+                <td><strong>∞ Staff</strong></td>
+                <td>30 Oct 2026</td>
+                <td><span class="admin-badge badge-approved">Active</span></td>
+                <td style="text-align: right; padding-right: 20px;">
+                  <span class="muted" style="font-size: 12px;">Primary Admin</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Manual Token Adjustment Modal (SRS Section 7.6) -->
+  <div class="modal-overlay" id="tokenAdjustmentModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Adjust User Token Wallet</h3>
+        <button class="modal-close" onclick="closeModal('tokenAdjustmentModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; line-height: 1.5; margin-bottom: 16px;">
+          SRS Section 7.6: <em>"Manual token adjustment by an admin with a mandatory reason."</em> Every modification appends an immutable entry to the <code>TokenTransaction</code> collection.
+        </p>
+
+        <form id="tokenAdjustmentForm" onsubmit="submitTokenAdjustment(event)">
+          <input type="hidden" id="targetTokenSpanId">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+            <label>
+              Target User
+              <input type="text" id="targetUserName" readonly style="background: #f1f5f9; font-weight: bold;">
+            </label>
+            <label>
+              Current Balance
+              <input type="text" id="targetUserCurrentBalance" readonly style="background: #f1f5f9; font-weight: bold; color: var(--green);">
+            </label>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 140px 1fr; gap: 14px; margin-bottom: 14px;">
+            <label>
+              Adjustment Action
+              <select id="adjustmentType" required onchange="updateTokenAdjustmentSign()">
+                <option value="CREDIT">Credit (+) Tokens</option>
+                <option value="DEBIT">Debit (-) Tokens</option>
+              </select>
+            </label>
+            <label>
+              Token Amount
+              <input type="number" id="adjustmentAmount" min="1" max="10000" value="50" required placeholder="e.g. 50">
+            </label>
+          </div>
+
+          <label style="margin-bottom: 14px;">
+            Audit Category (Mandatory)
+            <select id="adjustmentCategory" required>
+              <option value="">-- Choose Category --</option>
+              <option value="OUTAGE_COMPENSATION">Service Outage Compensation (TTS/AI Failure)</option>
+              <option value="GOODWILL_CREDIT">Customer Goodwill / Promotional Grant</option>
+              <option value="BILLING_CORRECTION">Billing Correction / Sandbox Refund</option>
+              <option value="FRAUD_REVERSAL">Abuse / Double-Spend Reversal (Debit)</option>
+            </select>
+          </label>
+
+          <label style="margin-bottom: 14px;">
+            Mandatory Explanation & Reason for Audit Log (Min 15 chars)
+            <textarea id="adjustmentReason" rows="3" required minlength="15" placeholder="Specify ticket # or reason for adjusting wallet balance..."></textarea>
+          </label>
+
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px; font-size: 12px; color: #166534;">
+            ℹ Balance will be updated atomically with an idempotency key. Negative balances are prevented by database constraints.
+          </div>
+
+          <div class="modal-footer" style="padding: 16px 0 0 0; background: transparent;">
+            <button type="button" class="outline" onclick="closeModal('tokenAdjustmentModal')">Cancel</button>
+            <button type="submit">Commit Token Transaction</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" role="status"></div>
+  <script src="admin-wireframes.js"></script>
+  <script>
+    let currentBalanceVal = 0;
+
+    function openTokenModal(name, email, currentTokens, spanId) {
+      document.getElementById('targetUserName').value = `${name} (${email})`;
+      document.getElementById('targetUserCurrentBalance').value = `${currentTokens} ◉`;
+      document.getElementById('targetTokenSpanId').value = spanId;
+      currentBalanceVal = currentTokens;
+      openModal('tokenAdjustmentModal');
+    }
+
+    function submitTokenAdjustment(e) {
+      e.preventDefault();
+      const type = document.getElementById('adjustmentType').value;
+      const amount = parseInt(document.getElementById('adjustmentAmount').value, 10);
+      const spanId = document.getElementById('targetTokenSpanId').value;
+      const reason = document.getElementById('adjustmentReason').value;
+
+      let newBalance = currentBalanceVal;
+      if (type === 'CREDIT') {
+        newBalance += amount;
+      } else {
+        if (newBalance - amount < 0) {
+          showToast('Cannot debit below 0 tokens! (SRS Section 7.6 constraint)', 'error');
+          return;
+        }
+        newBalance -= amount;
+      }
+
+      const span = document.getElementById(spanId);
+      if (span) {
+        span.innerText = `${newBalance} ◉`;
+      }
+
+      closeModal('tokenAdjustmentModal');
+      showToast(`Token adjustment of ${type === 'CREDIT' ? '+' : '-'}${amount} tokens saved to immutable ledger.`);
+    }
+
+    function toggleSuspend(name, statusId, btn) {
+      const statusElem = document.getElementById(statusId);
+      if (statusElem.innerText === 'Active') {
+        if (confirm(`Are you sure you want to suspend account for ${name}? User will not be able to log in.`)) {
+          statusElem.className = 'admin-badge badge-rejected';
+          statusElem.innerText = 'Suspended';
+          btn.innerText = 'Reactivate';
+          btn.style.color = 'var(--green)';
+          showToast(`Account for "${name}" has been suspended.`, 'error');
+        }
+      } else {
+        statusElem.className = 'admin-badge badge-approved';
+        statusElem.innerText = 'Active';
+        btn.innerText = 'Suspend';
+        btn.style.color = '#dc2626';
+        showToast(`Account for "${name}" reactivated.`);
+      }
+    }
+
+    function filterUserTable() {
+      const q = document.getElementById('userSearchInput').value.toLowerCase();
+      const plan = document.getElementById('planFilter').value;
+
+      document.querySelectorAll('#userTableBody tr').forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const rowPlan = row.dataset.plan || '';
+
+        const matchesQuery = !q || text.includes(q);
+        const matchesPlan = !plan || rowPlan === plan;
+
+        row.style.display = (matchesQuery && matchesPlan) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plans, Token Economy & AI Governance · BookVerse Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin-wireframes.css">
+</head>
+<body data-workspace="Admin">
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        ◈ Book<span>Verse</span>
+        <small>ADMINISTRATION SUITE</small>
+      </div>
+
+      <div>
+        <p class="navlabel">PLATFORM GOVERNANCE</p>
+        <nav style="display: grid; gap: 6px;">
+          <a href="admin-dashboard.html" class="admin-nav-item">
+            <span><span class="icon">◫</span> Dashboard</span>
+          </a>
+          <a href="admin-books-queue.html" class="admin-nav-item">
+            <span><span class="icon">✓</span> Book Approvals</span>
+            <span class="nav-counter">3</span>
+          </a>
+          <a href="admin-author-applications.html" class="admin-nav-item">
+            <span><span class="icon">♙</span> Author Applications</span>
+            <span class="nav-counter">2</span>
+          </a>
+          <a href="admin-users-list.html" class="admin-nav-item">
+            <span><span class="icon">👥</span> Users & Directory</span>
+          </a>
+          <a href="admin-moderation.html" class="admin-nav-item">
+            <span><span class="icon">🛡️</span> Moderation & DMCA</span>
+            <span class="nav-counter alert">4</span>
+          </a>
+          <a href="admin-plans-economy.html" class="admin-nav-item active">
+            <span><span class="icon">♧</span> Plans & Economy</span>
+          </a>
+          <a href="admin-audit-logs.html" class="admin-nav-item">
+            <span><span class="icon">📜</span> Audit & AI Logs</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="bottom">
+        <h3 style="font-size: 13px; margin-bottom: 6px;">Zero Downtime Config</h3>
+        <p class="muted" style="font-size: 11px; line-height: 1.5; margin-bottom: 12px;">SRS Sec 8.6: Pricing, quotas, token rates & AI limits update directly in MongoDB without redeploying code.</p>
+        <a href="index.html" class="button outline" style="display: block; text-align: center; text-decoration: none; padding: 8px 12px; font-size: 12px;">Switch Workspace ↗</a>
+      </div>
+
+      <a href="index.html" class="button outline" style="text-align: center; text-decoration: none;">↪ Sign out</a>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="pill">SRS SECTION 3.3, 3.4 & 8.6</span>
+          <span style="font-size: 13px; color: var(--muted);">Dynamic Subscription Plans, Token Economy & AI Cost Governance</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div class="profile">
+            <span class="avatar" style="background: #27564a; color: #fff;">A</span>
+            <div>
+              <strong>Staff Administrator</strong><br>
+              <small>admin@bookverse.internal</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="row welcome" style="margin-bottom: 20px;">
+          <div>
+            <h1>Economy, Subscription & AI Cost Governance</h1>
+            <p>Dynamically modify plan pricing tiers, token bands, top-up pack rates, and manage platform-wide AI spend thresholds.</p>
+          </div>
+          <button onclick="saveAllConfigurations()" style="background: #059669; display: flex; align-items: center; gap: 8px;">
+            <span>💾 Save Live Platform Configuration</span>
+          </button>
+        </div>
+
+        <!-- Section 1: Three Subscription Plans -->
+        <div style="margin-bottom: 32px;">
+          <div class="row" style="margin-bottom: 12px;">
+            <div>
+              <h2 style="font-size: 20px; margin: 0;">Subscription Tier Configurations (Sec 3.3)</h2>
+              <small class="muted">Stored in the database so pricing and entitlements can be adjusted without code deployment</small>
+            </div>
+            <span class="pill">Three Categories</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            <!-- Plan 1: Basic -->
+            <div class="card" style="border-top: 4px solid #64748b;">
+              <span class="pill" style="margin-bottom: 10px;">BASIC PLAN</span>
+              <h3 style="font-size: 18px; margin: 4px 0 12px;">E-Books & Reading</h3>
+              
+              <div style="display: grid; gap: 12px; font-size: 12px;">
+                <label>
+                  Monthly Fee (LKR)
+                  <input type="number" id="basicPrice" value="590" required>
+                </label>
+                <label>
+                  Monthly Token Allowance
+                  <input type="number" id="basicTokens" value="20" required>
+                </label>
+                <label>
+                  Rollover Allowed
+                  <select id="basicRollover">
+                    <option value="0" selected>No Rollover (0 tokens)</option>
+                    <option value="10">Up to 10 tokens</option>
+                  </select>
+                </label>
+                <label>
+                  Daily Free AI Questions (Sec 5.5)
+                  <input type="number" id="basicAiLimit" value="3" required>
+                </label>
+                <label>
+                  Allowed Devices & Library Cap
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="number" value="1" title="Max Devices">
+                    <input type="number" value="50" title="Library Limit">
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Plan 2: Plus -->
+            <div class="card" style="border-top: 4px solid #0284c7;">
+              <span class="pill" style="background: #e0f2fe; color: #0369a1; margin-bottom: 10px;">PLUS PLAN (POPULAR)</span>
+              <h3 style="font-size: 18px; margin: 4px 0 12px;">E-Books + Audiobooks</h3>
+
+              <div style="display: grid; gap: 12px; font-size: 12px;">
+                <label>
+                  Monthly Fee (LKR)
+                  <input type="number" id="plusPrice" value="1290" required>
+                </label>
+                <label>
+                  Monthly Token Allowance
+                  <input type="number" id="plusTokens" value="100" required>
+                </label>
+                <label>
+                  Rollover Cap
+                  <input type="number" id="plusRollover" value="50" required>
+                </label>
+                <label>
+                  Daily Free AI Questions
+                  <input type="number" id="plusAiLimit" value="10" required>
+                </label>
+                <label>
+                  Allowed Devices & Library Cap
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="number" value="2" title="Max Devices">
+                    <input type="number" value="200" title="Library Limit">
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Plan 3: Premium -->
+            <div class="card" style="border-top: 4px solid #7c3aed;">
+              <span class="pill" style="background: #ede9fe; color: #5b21b6; margin-bottom: 10px;">PREMIUM PLAN</span>
+              <h3 style="font-size: 18px; margin: 4px 0 12px;">Read-Along & Studio Voice</h3>
+
+              <div style="display: grid; gap: 12px; font-size: 12px;">
+                <label>
+                  Monthly Fee (LKR)
+                  <input type="number" id="premPrice" value="2490" required>
+                </label>
+                <label>
+                  Monthly Token Allowance
+                  <input type="number" id="premTokens" value="300" required>
+                </label>
+                <label>
+                  Rollover Cap
+                  <input type="number" id="premRollover" value="200" required>
+                </label>
+                <label>
+                  Daily Free AI Questions
+                  <input type="number" id="premAiLimit" value="30" required>
+                </label>
+                <label>
+                  Allowed Devices & Library Cap
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input type="number" value="4" title="Max Devices">
+                    <input type="text" value="Unlimited" readonly style="background: #f1f5f9;">
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Token Economy & Free Access Quota Settings -->
+        <div class="twocol" style="grid-template-columns: 1fr 1fr; margin-bottom: 32px;">
+          <!-- Left: Token Economy Rules -->
+          <section class="card">
+            <h2 style="font-size: 18px; margin-bottom: 6px;">Token Economy Rules (Sec 3.4 & 7.6)</h2>
+            <p class="muted" style="font-size: 12px; margin-bottom: 16px;">Virtual currency band limitations and author royalty distribution</p>
+
+            <div style="display: grid; gap: 14px; font-size: 12px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <label>
+                  Min Token Price for Locked Book
+                  <input type="number" id="minTokenBand" value="40" required>
+                  <small class="muted">SRS Default: 40 tokens</small>
+                </label>
+                <label>
+                  Max Token Price for Locked Book
+                  <input type="number" id="maxTokenBand" value="400" required>
+                  <small class="muted">SRS Default: 400 tokens</small>
+                </label>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <label>
+                  Author Unlock Share % (Sec 7.6)
+                  <input type="number" id="authorShare" value="70" min="50" max="90" required>
+                  <small class="muted">Author receives 70% of tokens</small>
+                </label>
+                <label>
+                  Subscription Author Pool % (Sec 3.6)
+                  <input type="number" id="authorPoolPct" value="40" min="20" max="60" required>
+                  <small class="muted">Distributed monthly by qualified reads</small>
+                </label>
+              </div>
+
+              <!-- Top-Up Packs Configuration -->
+              <div style="border-top: 1px solid var(--line); padding-top: 14px;">
+                <strong style="font-size: 13px; display: block; margin-bottom: 10px;">Top-Up Token Packs (Sandbox Gateway)</strong>
+                
+                <div style="display: grid; gap: 8px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #fbfbf7; border-radius: 8px; border: 1px solid var(--line);">
+                    <span>Small Pack: <strong>50 Tokens</strong></span>
+                    <input type="number" value="250" style="width: 100px; padding: 4px 8px;" title="Price in LKR"> <span>LKR</span>
+                  </div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #fbfbf7; border-radius: 8px; border: 1px solid var(--line);">
+                    <span>Medium Pack: <strong>150 Tokens</strong></span>
+                    <input type="number" value="750" style="width: 100px; padding: 4px 8px;" title="Price in LKR"> <span>LKR</span>
+                  </div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #fbfbf7; border-radius: 8px; border: 1px solid var(--line);">
+                    <span>Large Pack: <strong>400 Tokens</strong></span>
+                    <input type="number" value="1900" style="width: 100px; padding: 4px 8px;" title="Price in LKR"> <span>LKR</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Right: AI Cost Cap & Governance -->
+          <section class="card" style="border-left: 4px solid #8b5cf6;">
+            <div class="row" style="margin-bottom: 6px;">
+              <h2 style="font-size: 18px; margin: 0;">AI Spending Cap & Cost Limits (Sec 5.5 & 8.7)</h2>
+              <span class="pill" style="background: #ede9fe; color: #5b21b6;">Claude & TTS Guard</span>
+            </div>
+            <p class="muted" style="font-size: 12px; margin-bottom: 16px;">Controls platform expenditure on LLM embeddings and neural speech synthesis</p>
+
+            <div style="display: grid; gap: 14px; font-size: 12px;">
+              <label>
+                Monthly Platform-Wide AI Spending Cap (LKR)
+                <input type="number" id="aiSpendingCap" value="100000" step="5000" required>
+                <small class="muted">SRS Sec 8.7: AI features switch off gracefully if reached</small>
+              </label>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <label>
+                  Token Cost per Question (After Free Quota)
+                  <input type="number" value="1" required>
+                  <small class="muted">Default: 1 token (Sec 3.4)</small>
+                </label>
+                <label>
+                  Chapter Summary Token Cost
+                  <input type="number" value="2" required>
+                  <small class="muted">Default: 2 tokens (Sec 3.4)</small>
+                </label>
+              </div>
+
+              <!-- AI Emergency Killswitch -->
+              <div style="border-top: 1px solid var(--line); padding-top: 14px; background: #fdf2f8; padding: 14px; border-radius: 8px; border: 1px solid #fbcfe8;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <strong style="color: #9d174d; display: block; font-size: 13px;">Emergency AI Service Killswitch</strong>
+                    <small style="color: #be185d;">Manually pause LLM Book Q&A if external API provider experiences runaway billing</small>
+                  </div>
+                  <input type="checkbox" id="aiKillswitch" style="width: 22px; height: 22px; cursor: pointer;" onchange="toggleAiService(this)">
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" role="status"></div>
+  <script src="admin-wireframes.js"></script>
+  <script>
+    function saveAllConfigurations() {
+      const basic = document.getElementById('basicPrice').value;
+      const plus = document.getElementById('plusPrice').value;
+      const prem = document.getElementById('premPrice').value;
+      const cap = document.getElementById('aiSpendingCap').value;
+
+      showToast(`Platform settings committed! Basic: LKR ${basic}, Plus: LKR ${plus}, Prem: LKR ${prem}, AI Cap: LKR ${cap}.`);
+    }
+
+    function toggleAiService(chk) {
+      if (chk.checked) {
+        if (confirm('Warning: Enabling this will temporarily pause Claude Haiku Book Q&A for all readers. Continue?')) {
+          showToast('AI Services paused platform-wide. Fallback to basic search active.', 'error');
+        } else {
+          chk.checked = false;
+        }
+      } else {
+        showToast('AI Services restored. Book Q&A operational.');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inspect & Review Book · BookVerse Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin-wireframes.css">
+</head>
+<body data-workspace="Admin">
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        ◈ Book<span>Verse</span>
+        <small>ADMINISTRATION SUITE</small>
+      </div>
+
+      <div>
+        <p class="navlabel">PLATFORM GOVERNANCE</p>
+        <nav style="display: grid; gap: 6px;">
+          <a href="admin-dashboard.html" class="admin-nav-item">
+            <span><span class="icon">◫</span> Dashboard</span>
+          </a>
+          <a href="admin-books-queue.html" class="admin-nav-item active">
+            <span><span class="icon">✓</span> Book Approvals</span>
+            <span class="nav-counter">3</span>
+          </a>
+          <a href="admin-author-applications.html" class="admin-nav-item">
+            <span><span class="icon">♙</span> Author Applications</span>
+            <span class="nav-counter">2</span>
+          </a>
+          <a href="admin-users-list.html" class="admin-nav-item">
+            <span><span class="icon">👥</span> Users & Directory</span>
+          </a>
+          <a href="admin-moderation.html" class="admin-nav-item">
+            <span><span class="icon">🛡️</span> Moderation & DMCA</span>
+            <span class="nav-counter alert">4</span>
+          </a>
+          <a href="admin-plans-economy.html" class="admin-nav-item">
+            <span><span class="icon">♧</span> Plans & Economy</span>
+          </a>
+          <a href="admin-audit-logs.html" class="admin-nav-item">
+            <span><span class="icon">📜</span> Audit & AI Logs</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="bottom">
+        <h3 style="font-size: 13px; margin-bottom: 6px;">Inspection Checklist</h3>
+        <p class="muted" style="font-size: 11px; line-height: 1.5; margin-bottom: 8px;">
+          ✓ Verify copyright warranties<br>
+          ✓ Check token band (40–400)<br>
+          ✓ Validate chapter boundaries<br>
+          ✓ Test audio/read-along sync
+        </p>
+        <a href="admin-books-queue.html" class="button outline" style="display: block; text-align: center; text-decoration: none; padding: 6px; font-size: 11px;">← Back to Queue</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <a href="admin-books-queue.html" style="text-decoration: none; color: var(--green); font-weight: bold;">← Books Queue</a>
+          <span style="color: var(--line);">|</span>
+          <span class="pill">INSPECTION MODE</span>
+          <span style="font-size: 13px; color: var(--muted);">Submission #BK-9481 · The Clockwork Alchemist</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="admin-badge badge-pending">Status: Pending Review</span>
+          <div class="profile">
+            <span class="avatar" style="background: #27564a; color: #fff;">A</span>
+            <div>
+              <strong>Staff Administrator</strong>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content" style="padding-bottom: 80px;">
+        <!-- Title and Quick Actions Bar -->
+        <div class="row" style="margin-bottom: 16px;">
+          <div>
+            <h1>The Clockwork Alchemist</h1>
+            <p class="muted">By <strong>Kavinda Perera</strong> (Author ID: #ATH-402) · Submitted Today at 14:20 PM</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="outline" onclick="openRejectModal('The Clockwork Alchemist')" style="color: #dc2626;">Reject with Reason</button>
+            <button onclick="approveAndIngest()" id="approveBtn" style="background: #059669; display: flex; align-items: center; gap: 8px;">
+              <span>✓ Approve & Ingest into Atlas Vector</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Vector Ingestion Stepper Simulation -->
+        <div class="pipeline-stepper" id="ingestionStepper" style="display: none;">
+          <div class="pipeline-step completed" id="step1">
+            <div class="step-circle">1</div>
+            <div><strong>Approval Confirmed</strong><br><small>Status: Published</small></div>
+          </div>
+          <div class="step-line completed"></div>
+          <div class="pipeline-step active" id="step2">
+            <div class="step-circle">2</div>
+            <div><strong>Chapter Chunking</strong><br><small>FastAPI Worker</small></div>
+          </div>
+          <div class="step-line" id="line2"></div>
+          <div class="pipeline-step" id="step3">
+            <div class="step-circle">3</div>
+            <div><strong>bge-m3 Embeddings</strong><br><small>Multilingual 1024-dim</small></div>
+          </div>
+          <div class="step-line" id="line3"></div>
+          <div class="pipeline-step" id="step4">
+            <div class="step-circle">4</div>
+            <div><strong>MongoDB Atlas Index</strong><br><small>RAG Q&A Ready</small></div>
+          </div>
+        </div>
+
+        <!-- Split Review Grid -->
+        <div class="split-review-grid">
+          <!-- Left Column: Metadata, Pricing & File Validation -->
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Book Identity Card -->
+            <section class="card">
+              <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                <div style="width: 80px; height: 110px; background: #284e52; border-radius: 6px; display: grid; place-items: center; color: #fff; font-size: 24px; font-weight: bold; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                  CA
+                </div>
+                <div>
+                  <span class="badge" style="background: #ede9fe; color: #5b21b6; margin-bottom: 4px;">Fantasy / Steampunk</span>
+                  <h3 style="margin: 4px 0 6px; font-size: 18px;">The Clockwork Alchemist</h3>
+                  <p class="muted" style="font-size: 12px; margin-bottom: 6px;">Language: <strong>English (with Sinhala glossary)</strong></p>
+                  <small style="color: #065f46; font-weight: 600;">✓ Author Copyright Warranty Signed</small>
+                </div>
+              </div>
+
+              <div style="font-size: 12px; line-height: 1.6; color: #374151; background: #fbfbf7; padding: 12px; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 14px;">
+                <strong>Author Synopsis:</strong><br>
+                In the copper-lined alleys of Colombo 1888, an outcast mechanist discovers an ancient alchemical formula woven into brass punch-cards. When steam automata begin to awake with human memories, she must navigate high-seas airships and imperial secrets.
+              </div>
+
+              <!-- Economy & Pricing Form -->
+              <div style="border-top: 1px solid var(--line); padding-top: 14px;">
+                <h4 style="font-size: 13px; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted);">Business Model & Access Class (Sec 3.2)</h4>
+                
+                <div style="display: grid; gap: 12px;">
+                  <label>
+                    Access Classification
+                    <select id="bookAccessClass" style="font-weight: bold;">
+                      <option value="Token-Locked" selected>Token-Locked (Requires Tokens or Free Pass)</option>
+                      <option value="Included">Included (All Active Subscribers)</option>
+                    </select>
+                  </label>
+
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <label>
+                      Token Price (40–400 Band)
+                      <input type="number" id="tokenPriceInput" value="80" min="40" max="400" required>
+                      <small class="muted">Allowed: 40 to 400</small>
+                    </label>
+
+                    <label>
+                      Free Access Quota (Sec 3.5)
+                      <input type="number" id="freeQuotaInput" value="50" min="30" max="300" required>
+                      <small class="muted">Starter: 30–300 passes</small>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- File Upload & Format Inspection -->
+            <section class="card">
+              <h3 style="font-size: 15px; margin-bottom: 14px;">Uploaded Assets Verification</h3>
+
+              <div style="display: grid; gap: 10px; font-size: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f8faf6; border-radius: 8px; border: 1px solid var(--line);">
+                  <div>
+                    <strong>📄 Manuscript (EPUB)</strong><br>
+                    <small class="muted">clockwork_alchemist_v2.epub · 4.8 MB</small>
+                  </div>
+                  <span class="admin-badge badge-approved">✓ Valid EPUB3</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f8faf6; border-radius: 8px; border: 1px solid var(--line);">
+                  <div>
+                    <strong>🎙 Audio Narration (MP3)</strong><br>
+                    <small class="muted">14 chapter audio files · 128 kbps</small>
+                  </div>
+                  <span class="admin-badge badge-approved">✓ 14/14 Tracks</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f8faf6; border-radius: 8px; border: 1px solid var(--line);">
+                  <div>
+                    <strong>🖼 Cover Art</strong><br>
+                    <small class="muted">1600 × 2560 px · JPEG (300 DPI)</small>
+                  </div>
+                  <span class="admin-badge badge-approved">✓ Verified</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Author Card -->
+            <section class="card">
+              <div class="row">
+                <h3>About Author</h3>
+                <span class="pill" style="background: #e6eee3; color: #27564a;">Level 2 Author</span>
+              </div>
+              <p style="font-size: 13px; line-height: 1.5; margin-top: 8px;">
+                <strong>Kavinda Perera</strong> (kavinda@example.com)<br>
+                Published 3 previous titles on BookVerse. Overall average rating: <strong>★ 4.9</strong> across 2,400 readers. No copyright or moderation strikes.
+              </p>
+            </section>
+          </div>
+
+          <!-- Right Column: Interactive Chapter Reading & AI Inspection -->
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Chapter Selector & Reading Pane -->
+            <section class="preview-panel">
+              <div class="row" style="margin-bottom: 14px;">
+                <div>
+                  <h3 style="font-size: 16px; margin: 0;">Chapter Text & Audio Verification</h3>
+                  <small class="muted">Inspect text clarity, typography, and test read-along audio synchronization</small>
+                </div>
+                <select id="chapterSelect" onchange="changeSampleChapter(this.value)" style="padding: 6px 12px; font-size: 13px;">
+                  <option value="1">Chapter 1: The Copper Foundry</option>
+                  <option value="2">Chapter 2: The Automaton's Heart</option>
+                  <option value="3">Chapter 3: Secrets of the Mist</option>
+                </select>
+              </div>
+
+              <!-- Audio Player Simulation -->
+              <div style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <button type="button" class="light" onclick="toggleAudioPreview(this)" style="padding: 8px 14px; font-weight: bold;">▶ Play Narration</button>
+                  <span style="font-size: 12px; font-weight: 500;">Ch 1 Narration Track (Voice: Piper Neural Sri Lankan Accent)</span>
+                </div>
+                <div style="font-size: 12px; color: var(--muted);">01:24 / 08:45</div>
+              </div>
+
+              <!-- Reader Sample Box -->
+              <div class="reader-sample-box" id="sampleReadingBox">
+                <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 22px; text-align: center; margin-bottom: 20px;">Chapter 1: The Copper Foundry</h2>
+                
+                <p>The steam whistles of Colombo harbour sounded three times before the brass shutters rolled open. Kalani wiped the grease from her bronze goggles, peering down into the belly of the clockwork assembly.</p>
+
+                <p>Every gear inside this device was hand-milled from imported Cornish copper, etched with symbols that predated the arrival of the merchant steamers. The needle inside the manometer flickered with an unnatural pale violet hue.</p>
+
+                <p>"You shouldn't tamper with that mechanism," a gruff voice echoed through the foundry. Uncle Jayawardena stepped past the rows of inactive boiler tubes, his wooden cane tapping against the stone floor. "The Harbour Authority has already marked this shipment for impound."</p>
+
+                <p>Kalani did not look up. With steady fingers, she inserted the fourth cogwheel into the differential axle. "The Authority does not understand what they are holding. This is not contraband. It is memory."</p>
+              </div>
+            </section>
+
+            <!-- Pre-Publishing RAG Q&A Test Panel -->
+            <section class="card" style="border: 1px solid #ddd6fe; background: #faf5ff;">
+              <div class="row" style="margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 18px;">✧</span>
+                  <h3 style="font-size: 15px; margin: 0; color: #5b21b6;">Pre-Flight RAG Grounding Verification (Sec 5.3)</h3>
+                </div>
+                <span class="pill" style="background: #ede9fe; color: #5b21b6;">Atlas Vector Simulator</span>
+              </div>
+              <p style="font-size: 12px; color: #6b21a8; line-height: 1.5; margin-bottom: 12px;">
+                Admins can test RAG citations against the extracted chapter chunks to ensure the AI assistant gives grounded answers without hallucinations.
+              </p>
+
+              <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <input type="text" id="ragQueryInput" value="What metal is used for the gears in the clockwork assembly?" style="flex: 1; font-size: 13px;" placeholder="Ask a test question...">
+                <button type="button" onclick="testRagQuery()" style="background: #7c3aed; color: #fff; padding: 8px 16px;">Test RAG</button>
+              </div>
+
+              <div id="ragResultBox" style="background: #fff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 12px; font-size: 12px; line-height: 1.6; display: block;">
+                <strong>Generated Answer (Claude Haiku 5.5 Grounded):</strong><br>
+                The gears inside the clockwork assembly are hand-milled from <em>imported Cornish copper</em> and are etched with ancient symbols [Chapter 1, Chunk #04].<br>
+                <small style="color: #059669; font-weight: bold;">✓ Citation Grounding Verified · No Spoilers Detected</small>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Rejection Modal -->
+  <div class="modal-overlay" id="rejectModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Reject Book Submission</h3>
+        <button class="modal-close" onclick="closeModal('rejectModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="handleReject(event)">
+          <label style="margin-bottom: 14px;">
+            Target Book
+            <input type="text" value="The Clockwork Alchemist" readonly style="background: #f1f5f9;">
+          </label>
+          <label style="margin-bottom: 14px;">
+            Rejection Reason (Mandatory)
+            <select required>
+              <option value="">-- Choose Reason --</option>
+              <option value="price">Token Price out of band (Sec 3.2)</option>
+              <option value="quality">Formatting or typography issues</option>
+              <option value="copyright">Potential copyright question</option>
+            </select>
+          </label>
+          <label style="margin-bottom: 14px;">
+            Feedback to Author (Mandatory)
+            <textarea rows="4" required placeholder="Explain required revisions..."></textarea>
+          </label>
+          <div class="modal-footer" style="padding: 12px 0 0; background: transparent;">
+            <button type="button" class="outline" onclick="closeModal('rejectModal')">Cancel</button>
+            <button type="submit" style="background: #dc2626;">Confirm Rejection</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" role="status"></div>
+  <script src="admin-wireframes.js"></script>
+  <script>
+    function changeSampleChapter(val) {
+      const box = document.getElementById('sampleReadingBox');
+      if (val === '1') {
+        box.innerHTML = `<h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 22px; text-align: center; margin-bottom: 20px;">Chapter 1: The Copper Foundry</h2>
+        <p>The steam whistles of Colombo harbour sounded three times before the brass shutters rolled open. Kalani wiped the grease from her bronze goggles, peering down into the belly of the clockwork assembly.</p>
+        <p>Every gear inside this device was hand-milled from imported Cornish copper, etched with symbols that predated the arrival of the merchant steamers.</p>`;
+      } else if (val === '2') {
+        box.innerHTML = `<h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 22px; text-align: center; margin-bottom: 20px;">Chapter 2: The Automaton's Heart</h2>
+        <p>Rain hammered against the corrugated zinc roof of the workshop. On the wooden operating table lay the automaton, its chest cavity open like the ribcage of an iron bird.</p>
+        <p>Inside, the pendulum oscillated with a calm, deliberate rhythm that defied the tempest outside.</p>`;
+      } else {
+        box.innerHTML = `<h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 22px; text-align: center; margin-bottom: 20px;">Chapter 3: Secrets of the Mist</h2>
+        <p>By midnight, the harbor had vanished behind a shroud of sulfurous sea fog. A lone whistle echoed from the naval pier, announcing the departure of the flagship.</p>`;
+      }
+      showToast(`Loaded Chapter ${val} sample text`);
+    }
+
+    function toggleAudioPreview(btn) {
+      if (btn.innerText.includes('Play')) {
+        btn.innerText = '⏸ Pause Narration';
+        btn.style.background = '#e0f2fe';
+        showToast('Playing Chapter 1 sample audio (Simulated TTS audio sync)');
+      } else {
+        btn.innerText = '▶ Play Narration';
+        btn.style.background = '';
+      }
+    }
+
+    function testRagQuery() {
+      const q = document.getElementById('ragQueryInput').value;
+      const resBox = document.getElementById('ragResultBox');
+      resBox.innerHTML = `<em>Generating embedding via bge-m3 & querying MongoDB Atlas vector index...</em>`;
+      setTimeout(() => {
+        resBox.innerHTML = `<strong>Generated Answer (Claude Haiku 5.5 Grounded):</strong><br>
+        Based on Chapter 1, the device contains gears hand-milled from <em>Cornish copper</em> that Kalani refuses to surrender to the Harbour Authority.<br>
+        <small style="color: #059669; font-weight: bold;">✓ Vector Search Similarity Score: 0.94 · Grounded</small>`;
+      }, 500);
+    }
+
+    function approveAndIngest() {
+      const btn = document.getElementById('approveBtn');
+      const stepper = document.getElementById('ingestionStepper');
+      btn.disabled = true;
+      btn.innerText = 'Publishing & Ingesting...';
+      stepper.style.display = 'flex';
+
+      showToast('Book published! Initiating background RAG embedding pipeline in FastAPI...');
+
+      setTimeout(() => {
+        document.getElementById('step2').className = 'pipeline-step completed';
+        document.getElementById('line2').className = 'step-line completed';
+        document.getElementById('step3').className = 'pipeline-step active';
+      }, 1200);
+
+      setTimeout(() => {
+        document.getElementById('step3').className = 'pipeline-step completed';
+        document.getElementById('line3').className = 'step-line completed';
+        document.getElementById('step4').className = 'pipeline-step completed';
+        showToast('Atlas Vector indexing complete! Book is now live with Book Q&A enabled.');
+        btn.innerText = '✓ Published & Ingested';
+        btn.style.background = '#065f46';
+      }, 2500);
+    }
+
+    function openRejectModal() {
+      openModal('rejectModal');
+    }
+
+    function handleReject(e) {
+      e.preventDefault();
+      closeModal('rejectModal');
+      showToast('Book rejected with mandatory feedback recorded.', 'error');
+      setTimeout(() => {
+        window.location.href = 'admin-books-queue.html';
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

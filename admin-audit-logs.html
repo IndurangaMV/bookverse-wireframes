@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>System Audit Logs & Security Trail · BookVerse Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin-wireframes.css">
+</head>
+<body data-workspace="Admin">
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        ◈ Book<span>Verse</span>
+        <small>ADMINISTRATION SUITE</small>
+      </div>
+
+      <div>
+        <p class="navlabel">PLATFORM GOVERNANCE</p>
+        <nav style="display: grid; gap: 6px;">
+          <a href="admin-dashboard.html" class="admin-nav-item">
+            <span><span class="icon">◫</span> Dashboard</span>
+          </a>
+          <a href="admin-books-queue.html" class="admin-nav-item">
+            <span><span class="icon">✓</span> Book Approvals</span>
+            <span class="nav-counter">3</span>
+          </a>
+          <a href="admin-author-applications.html" class="admin-nav-item">
+            <span><span class="icon">♙</span> Author Applications</span>
+            <span class="nav-counter">2</span>
+          </a>
+          <a href="admin-users-list.html" class="admin-nav-item">
+            <span><span class="icon">👥</span> Users & Directory</span>
+          </a>
+          <a href="admin-moderation.html" class="admin-nav-item">
+            <span><span class="icon">🛡️</span> Moderation & DMCA</span>
+            <span class="nav-counter alert">4</span>
+          </a>
+          <a href="admin-plans-economy.html" class="admin-nav-item">
+            <span><span class="icon">♧</span> Plans & Economy</span>
+          </a>
+          <a href="admin-audit-logs.html" class="admin-nav-item active">
+            <span><span class="icon">📜</span> Audit & AI Logs</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="bottom">
+        <h3 style="font-size: 13px; margin-bottom: 6px;">Audit Integrity</h3>
+        <p class="muted" style="font-size: 11px; line-height: 1.5; margin-bottom: 12px;">SRS Sec 8.2: Immutable record of logins, token adjustments, moderation interventions, and plan modifications.</p>
+        <a href="index.html" class="button outline" style="display: block; text-align: center; text-decoration: none; padding: 8px 12px; font-size: 12px;">Switch Workspace ↗</a>
+      </div>
+
+      <a href="index.html" class="button outline" style="text-align: center; text-decoration: none;">↪ Sign out</a>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span class="pill">SRS SECTION 7.4 & 8.2</span>
+          <span style="font-size: 13px; color: var(--muted);">Immutable Security Audit Trail & System Actions</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div class="profile">
+            <span class="avatar" style="background: #27564a; color: #fff;">A</span>
+            <div>
+              <strong>Staff Administrator</strong><br>
+              <small>admin@bookverse.internal</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="row welcome" style="margin-bottom: 20px;">
+          <div>
+            <h1>Security Audit Trail & Governance Logs</h1>
+            <p>Append-only ledger of administrative decisions, manual wallet adjustments, book publishing events, and security exceptions.</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="outline" onclick="showToast('Exported signed audit log (JSON-LD)')">📥 Export Audit Trail</button>
+          </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="all" onclick="filterAuditCategory('all')">All Events (842)</button>
+          <button class="admin-tab" data-tab="token" onclick="filterAuditCategory('token')">Token Adjustments</button>
+          <button class="admin-tab" data-tab="publishing" onclick="filterAuditCategory('publishing')">Book Approvals & Rejections</button>
+          <button class="admin-tab" data-tab="moderation" onclick="filterAuditCategory('moderation')">Moderation & DMCA</button>
+          <button class="admin-tab" data-tab="auth" onclick="filterAuditCategory('auth')">Logins & Security</button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="table-filter-bar">
+          <input type="search" class="search table-search" id="auditSearchInput" placeholder="⌕ Filter by actor, reason, target entity, or IP address..." oninput="searchAuditTable()">
+        </div>
+
+        <!-- Audit Table -->
+        <section class="card" style="padding: 0; overflow: hidden;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #fbfbf7;">
+                <th style="padding-left: 20px;">Timestamp</th>
+                <th>Admin Actor</th>
+                <th>Event Type</th>
+                <th>Target Resource</th>
+                <th>Mandatory Reason & Details</th>
+                <th>Source IP</th>
+              </tr>
+            </thead>
+            <tbody id="auditTableBody">
+              <!-- Log 1: Token Adjustment -->
+              <tr data-category="token">
+                <td style="padding-left: 20px;">
+                  <strong>Today, 15:42</strong><br>
+                  <small class="muted">21 Nov 2026</small>
+                </td>
+                <td>
+                  <strong>Induranga (Admin)</strong><br>
+                  <small class="muted">#ADM-001</small>
+                </td>
+                <td><span class="admin-badge badge-warning">Token Adjustment</span></td>
+                <td>
+                  <code>User: #U-1002 (mira@example.com)</code>
+                </td>
+                <td>
+                  <strong>+50 Tokens Credited</strong><br>
+                  <small>Reason: Service Outage Compensation for TTS failure in Ch 2 (Ticket #BV-402)</small>
+                </td>
+                <td><code>192.168.1.105</code></td>
+              </tr>
+
+              <!-- Log 2: Book Approval & Ingestion -->
+              <tr data-category="publishing">
+                <td style="padding-left: 20px;">
+                  <strong>Today, 14:30</strong><br>
+                  <small class="muted">21 Nov 2026</small>
+                </td>
+                <td>
+                  <strong>Induranga (Admin)</strong><br>
+                  <small class="muted">#ADM-001</small>
+                </td>
+                <td><span class="admin-badge badge-approved">Book Approved</span></td>
+                <td>
+                  <code>Book: #BK-2041 (The Moonlit Garden)</code>
+                </td>
+                <td>
+                  <strong>Status: Pending Review → Published</strong><br>
+                  <small>Triggered FastAPI chapter chunking & Atlas Vector Search indexing (1,480 chunks)</small>
+                </td>
+                <td><code>192.168.1.105</code></td>
+              </tr>
+
+              <!-- Log 3: User Suspension -->
+              <tr data-category="moderation">
+                <td style="padding-left: 20px;">
+                  <strong>Today, 11:15</strong><br>
+                  <small class="muted">21 Nov 2026</small>
+                </td>
+                <td>
+                  <strong>System Security Sentinel</strong><br>
+                  <small class="muted">Automated Worker</small>
+                </td>
+                <td><span class="admin-badge badge-rejected">Account Suspended</span></td>
+                <td>
+                  <code>User: #U-9941 (reader_bot_91)</code>
+                </td>
+                <td>
+                  <strong>Automated Free-Pass Sybil Strike</strong><br>
+                  <small>Exceeded threshold: 28 pass claims within 180s from single datacenter ASN</small>
+                </td>
+                <td><code>Internal Job</code></td>
+              </tr>
+
+              <!-- Log 4: Plan Economy Change -->
+              <tr data-category="moderation">
+                <td style="padding-left: 20px;">
+                  <strong>Yesterday, 17:04</strong><br>
+                  <small class="muted">20 Nov 2026</small>
+                </td>
+                <td>
+                  <strong>Induranga (Admin)</strong><br>
+                  <small class="muted">#ADM-001</small>
+                </td>
+                <td><span class="admin-badge badge-ai">Config Updated</span></td>
+                <td>
+                  <code>Collection: subscription_plans</code>
+                </td>
+                <td>
+                  <strong>Updated Plus Plan Monthly Fee</strong><br>
+                  <small>Changed LKR 1,190 → LKR 1,290. Live update in MongoDB replica set.</small>
+                </td>
+                <td><code>192.168.1.105</code></td>
+              </tr>
+
+              <!-- Log 5: Failed Login Lockout -->
+              <tr data-category="auth">
+                <td style="padding-left: 20px;">
+                  <strong>19 Nov, 22:10</strong><br>
+                  <small class="muted">19 Nov 2026</small>
+                </td>
+                <td>
+                  <strong>Spring Security Filter</strong><br>
+                  <small class="muted">Security Handler</small>
+                </td>
+                <td><span class="admin-badge badge-rejected">Account Lockout</span></td>
+                <td>
+                  <code>Target: staff_accounts</code>
+                </td>
+                <td>
+                  <strong>Failed Login Threshold Exceeded (Sec 7.1)</strong><br>
+                  <small>5 consecutive invalid passwords for admin_test. IP temporarily throttled.</small>
+                </td>
+                <td><code>112.134.42.19</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" role="status"></div>
+  <script src="admin-wireframes.js"></script>
+  <script>
+    function filterAuditCategory(cat) {
+      document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+      document.querySelector(`[data-tab="${cat}"]`).classList.add('active');
+
+      document.querySelectorAll('#auditTableBody tr').forEach(row => {
+        if (cat === 'all' || row.dataset.category === cat) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function searchAuditTable() {
+      const q = document.getElementById('auditSearchInput').value.toLowerCase();
+      document.querySelectorAll('#auditTableBody tr').forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = (!q || text.includes(q)) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

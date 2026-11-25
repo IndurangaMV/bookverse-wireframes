@@ -1,0 +1,368 @@
+/* BookVerse Admin Wireframe Suite Stylesheet */
+/* Extends styles.css with admin-specific layouts, components, and modals */
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.badge-pending {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.badge-approved, .badge-active, .badge-success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.badge-rejected, .badge-suspended, .badge-danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.badge-warning {
+  background: #ffedd5;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
+}
+
+.badge-ai {
+  background: #ede9fe;
+  color: #5b21b6;
+  border: 1px solid #ddd6fe;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-decoration: none;
+  color: #65736b;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.admin-nav-item:hover {
+  background: #f0f4ee;
+  color: var(--ink);
+}
+
+.admin-nav-item.active {
+  background: #e6eee3;
+  color: #234f42;
+  font-weight: 700;
+  border-left: 3px solid var(--green);
+}
+
+.admin-nav-item .icon {
+  display: inline-block;
+  width: 24px;
+  font-size: 16px;
+}
+
+.nav-counter {
+  background: #27564a;
+  color: #fff;
+  border-radius: 12px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.nav-counter.alert {
+  background: #dc2626;
+}
+
+/* Tabs */
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 20px 0;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+  overflow-x: auto;
+}
+
+.admin-tab {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-tab:hover {
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.admin-tab.active {
+  background: var(--paper);
+  border-color: var(--line);
+  color: var(--green);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 32, 29, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-card.wide {
+  max-width: 850px;
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 19px;
+  color: var(--ink);
+}
+
+.modal-close {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.modal-body {
+  padding: 24px;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  background: #fbfbf7;
+  border-radius: 0 0 16px 16px;
+}
+
+/* Table Utilities */
+.table-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.table-search {
+  flex: 1;
+  min-width: 240px;
+}
+
+.table-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-btn-group {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.action-btn-group button {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+/* Split Pane for Book Review */
+.split-review-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.preview-panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.reader-sample-box {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 30px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.9;
+  max-height: 520px;
+  overflow-y: auto;
+  color: #2b3a36;
+}
+
+/* Stepper / Timeline for AI Ingestion */
+.pipeline-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8faf6;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin: 18px 0;
+}
+
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.pipeline-step.completed {
+  color: #065f46;
+  font-weight: 600;
+}
+
+.pipeline-step.active {
+  color: #5b21b6;
+  font-weight: 700;
+}
+
+.step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.pipeline-step.completed .step-circle {
+  background: #10b981;
+  color: #fff;
+}
+
+.pipeline-step.active .step-circle {
+  background: #8b5cf6;
+  color: #fff;
+  box-shadow: 0 0 0 4px #ede9fe;
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  margin: 0 12px;
+}
+
+.step-line.completed {
+  background: #10b981;
+}
+
+/* Progress bar */
+.admin-progress {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.admin-progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+/* SLA Countdown banner */
+.sla-alert-banner {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #9f1239;
+  padding: 14px 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .split-review-grid {
+    grid-template-columns: 1fr;
+  }
+}
